@@ -291,28 +291,104 @@ const message = document.querySelector("#form-message");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    const lang = formLang.value;
+  const lang = formLang.value;
 
-    const messages = {
-      pt: [
-        "Enviando inscrição...",
-        "Inscrição recebida! Seu código de acompanhamento é:",
-        "Guarde esse código para consultar o status da sua candidatura."
-      ],
-      en: [
-        "Submitting application...",
-        "Application received! Your tracking code is:",
-        "Keep this code to check your application status."
-      ],
-      es: [
-        "Enviando inscripción...",
-        "¡Solicitud recibida! Tu código de seguimiento es:",
-        "Guarda este código para consultar el estado de tu solicitud."
-      ]
-    };
+  const messages = {
+    pt: {
+      sending: "Enviando inscrição...",
+      success: "Inscrição recebida com sucesso!",
+      code: "Seu código de candidatura é:",
+      error: "Não foi possível enviar. Tente novamente."
+    },
+    en: {
+      sending: "Submitting application...",
+      success: "Application received successfully!",
+      code: "Your application code is:",
+      error: "Could not submit. Please try again."
+    },
+    es: {
+      sending: "Enviando inscripción...",
+      success: "¡Inscripción recibida con éxito!",
+      code: "Tu código de solicitud es:",
+      error: "No fue posible enviar. Inténtalo de nuevo."
+    }
+  };
 
+  const currentMessages = messages[lang] || messages.pt;
+
+  message.textContent = currentMessages.sending;
+
+  if (
+    SUPABASE_URL.startsWith("YOUR_") ||
+    SUPABASE_ANON_KEY.startsWith("YOUR_")
+  ) {
+    message.textContent = "Configure Supabase in app.js before publishing.";
+    return;
+  }
+
+  const data = Object.fromEntries(new FormData(form).entries());
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/submit_application`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+        },
+        body: JSON.stringify({
+          p_nickname: data.nickname,
+          p_discord: data.discord,
+          p_current_server: data.current_server,
+          p_current_alliance: data.current_alliance || "",
+          p_power: data.power,
+          p_kills: data.kills || "",
+          p_profession: data.profession || "",
+          p_desired_alliance: data.desired_alliance || "",
+          p_friends: data.friends || "",
+          p_squad_1: data.squad_1 || "",
+          p_squad_2: data.squad_2 || "",
+          p_squad_3: data.squad_3 || "",
+          p_contact: data.contact || "",
+          p_comments: data.comments || "",
+          p_language: data.language || "pt"
+        })
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText);
+    }
+
+    const result = await response.json();
+
+    const applicationCode = result?.[0]?.application_code;
+
+    if (!applicationCode) {
+      throw new Error("Application code was not returned.");
+    }
+
+    form.reset();
+
+    formLang.value = lang;
+
+    message.innerHTML = `
+      <strong>${currentMessages.success}</strong><br>
+      ${currentMessages.code}
+      <strong>${applicationCode}</strong>
+    `;
+
+  } catch (error) {
+    console.error("Application submission error:", error);
+
+    message.textContent = currentMessages.error;
+  }
+});
     message.textContent = messages[lang][0];
 
     if (
