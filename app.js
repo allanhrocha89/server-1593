@@ -1,4 +1,3 @@
-```javascript
 const SUPABASE_URL = "https://tctbfrljloakqfrvtghf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4mU1Xs4dabKVcvVjtJZWgA_sNGYlE0U";
 
@@ -680,4 +679,3 @@ if (statusCodeInput) {
     }
   );
 }
-```
