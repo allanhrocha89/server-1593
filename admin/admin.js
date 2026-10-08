@@ -666,4 +666,580 @@ applicationDetails.scrollIntoView({
 
 // ======================================================
 // DETALHES DA CANDIDATURA
-// ======================================
+// ======================================================
+
+function renderApplicationDetails(
+application
+) {
+
+if (!detailsContent) {
+return;
+}
+
+const fields = [
+["Código", application.application_code],
+["Nickname", application.nickname],
+["Discord", application.discord],
+["Servidor atual", application.current_server],
+["Aliança atual", application.current_alliance],
+["Power", application.power],
+["Kills", application.kills],
+["Profissão", application.profession],
+["Aliança desejada", application.desired_alliance],
+["Amigos / grupo", application.friends],
+["Squad 1", application.squad_1],
+["Squad 2", application.squad_2],
+["Squad 3", application.squad_3],
+["Contato adicional", application.contact],
+["Idioma", application.language],
+["Informações adicionais", application.comments],
+["Criada em", formatDate(application.created_at)],
+["Atualizada em", formatDate(application.updated_at)]
+];
+
+detailsContent.innerHTML = "";
+
+fields.forEach(function(field) {
+
+```
+const label =
+  field[0];
+
+const value =
+  field[1] || "-";
+
+
+const item =
+  document.createElement("div");
+
+item.className =
+  "detail-item";
+
+
+item.innerHTML =
+  '<span class="detail-label">' +
+  escapeHtml(label) +
+  "</span>" +
+
+  '<div class="detail-value">' +
+  escapeHtml(value) +
+  "</div>";
+
+
+detailsContent.appendChild(item);
+```
+
+});
+}
+
+// ======================================================
+// ATUALIZAR CANDIDATURA
+// ======================================================
+
+async function saveApplication() {
+
+if (!currentApplication) {
+return;
+}
+
+const newStatus =
+detailsStatus
+? detailsStatus.value
+: currentApplication.status;
+
+const newNotes =
+adminNotes
+? adminNotes.value
+: "";
+
+setSaveMessage(
+"Salvando alterações..."
+);
+
+const response = await fetch(
+SUPABASE_URL +
+"/rest/v1/applications?id=eq." +
+encodeURIComponent(
+currentApplication.id
+),
+{
+method: "PATCH",
+
+```
+  headers: {
+    "Content-Type": "application/json",
+    "apikey": SUPABASE_ANON_KEY,
+    "Authorization":
+      "Bearer " + accessToken,
+    "Prefer": "return=representation"
+  },
+
+  body: JSON.stringify({
+    status: newStatus,
+    admin_notes: newNotes,
+    updated_at: new Date().toISOString()
+  })
+}
+```
+
+);
+
+if (!response.ok) {
+
+```
+const errorText =
+  await response.text();
+
+throw new Error(errorText);
+```
+
+}
+
+const updated =
+await response.json();
+
+if (
+Array.isArray(updated) &&
+updated.length > 0
+) {
+
+```
+currentApplication =
+  updated[0];
+```
+
+} else {
+
+```
+currentApplication.status =
+  newStatus;
+
+currentApplication.admin_notes =
+  newNotes;
+```
+
+}
+
+const index =
+applications.findIndex(
+function(item) {
+return item.id ===
+currentApplication.id;
+}
+);
+
+if (index !== -1) {
+
+```
+applications[index] =
+  currentApplication;
+```
+
+}
+
+updateStatistics();
+
+renderApplications();
+
+renderApplicationDetails(
+currentApplication
+);
+
+if (detailsStatus) {
+detailsStatus.value =
+currentApplication.status;
+}
+
+if (adminNotes) {
+adminNotes.value =
+currentApplication.admin_notes || "";
+}
+
+setSaveMessage(
+"Alterações salvas com sucesso.",
+"success"
+);
+}
+
+// ======================================================
+// LOGOUT
+// ======================================================
+
+function logout() {
+
+accessToken = "";
+
+currentUser = null;
+
+localStorage.removeItem(
+AUTH_TOKEN_KEY
+);
+
+localStorage.removeItem(
+USER_KEY
+);
+
+if (applicationDetails) {
+applicationDetails.hidden = true;
+}
+
+showLogin();
+
+if (adminPasswordInput) {
+adminPasswordInput.value = "";
+}
+
+setLoginMessage("");
+}
+
+// ======================================================
+// EVENTO DE LOGIN
+// ======================================================
+
+if (loginForm) {
+
+loginForm.addEventListener(
+"submit",
+async function(event) {
+
+```
+  event.preventDefault();
+
+
+  const email =
+    adminEmailInput
+      ? adminEmailInput.value.trim()
+      : "";
+
+  const password =
+    adminPasswordInput
+      ? adminPasswordInput.value
+      : "";
+
+
+  if (!email || !password) {
+
+    setLoginMessage(
+      "Informe seu e-mail e sua senha.",
+      "error"
+    );
+
+    return;
+  }
+
+
+  setLoginMessage(
+    "Entrando..."
+  );
+
+
+  try {
+
+    const auth =
+      await login(
+        email,
+        password
+      );
+
+
+    accessToken =
+      auth.access_token;
+
+
+    currentUser =
+      auth.user;
+
+
+    localStorage.setItem(
+      AUTH_TOKEN_KEY,
+      accessToken
+    );
+
+
+    localStorage.setItem(
+      USER_KEY,
+      JSON.stringify(
+        currentUser
+      )
+    );
+
+
+    const isAdmin =
+      await verifyAdmin(
+        currentUser.email
+      );
+
+
+    if (!isAdmin) {
+
+      logout();
+
+      setLoginMessage(
+        "Este usuário não possui permissão de administrador.",
+        "error"
+      );
+
+      return;
+    }
+
+
+    if (adminUserEmail) {
+
+      adminUserEmail.textContent =
+        currentUser.email;
+    }
+
+
+    showDashboard();
+
+    setLoginMessage("");
+
+
+    await loadApplications();
+
+
+  } catch (error) {
+
+    console.error(
+      "Admin login error:",
+      error
+    );
+
+
+    accessToken = "";
+
+    localStorage.removeItem(
+      AUTH_TOKEN_KEY
+    );
+
+
+    setLoginMessage(
+      "Não foi possível entrar. Verifique seu e-mail e senha.",
+      "error"
+    );
+  }
+}
+```
+
+);
+}
+
+// ======================================================
+// LOGOUT
+// ======================================================
+
+if (logoutButton) {
+
+logoutButton.addEventListener(
+"click",
+function() {
+logout();
+}
+);
+}
+
+// ======================================================
+// PESQUISA
+// ======================================================
+
+if (searchInput) {
+
+searchInput.addEventListener(
+"input",
+function() {
+renderApplications();
+}
+);
+}
+
+// ======================================================
+// FILTRO DE STATUS
+// ======================================================
+
+if (statusFilter) {
+
+statusFilter.addEventListener(
+"change",
+function() {
+renderApplications();
+}
+);
+}
+
+// ======================================================
+// ATUALIZAR
+// ======================================================
+
+if (refreshButton) {
+
+refreshButton.addEventListener(
+"click",
+async function() {
+
+```
+  try {
+
+    await loadApplications();
+
+  } catch (error) {
+
+    console.error(
+      "Refresh error:",
+      error
+    );
+
+    setApplicationsMessage(
+      "Não foi possível atualizar as candidaturas.",
+      "error"
+    );
+  }
+}
+```
+
+);
+}
+
+// ======================================================
+// FECHAR DETALHES
+// ======================================================
+
+if (closeDetailsButton) {
+
+closeDetailsButton.addEventListener(
+"click",
+function() {
+
+```
+  if (applicationDetails) {
+    applicationDetails.hidden = true;
+  }
+
+  currentApplication = null;
+}
+```
+
+);
+}
+
+// ======================================================
+// SALVAR ALTERAÇÕES
+// ======================================================
+
+if (saveApplicationButton) {
+
+saveApplicationButton.addEventListener(
+"click",
+async function() {
+
+```
+  try {
+
+    await saveApplication();
+
+  } catch (error) {
+
+    console.error(
+      "Save application error:",
+      error
+    );
+
+    setSaveMessage(
+      "Não foi possível salvar as alterações.",
+      "error"
+    );
+  }
+}
+```
+
+);
+}
+
+// ======================================================
+// RESTAURAR SESSÃO
+// ======================================================
+
+async function restoreSession() {
+
+if (!accessToken) {
+
+```
+showLogin();
+
+return;
+```
+
+}
+
+try {
+
+```
+const response =
+  await fetch(
+    SUPABASE_URL +
+      "/auth/v1/user",
+    {
+      method: "GET",
+
+      headers: {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization":
+          "Bearer " + accessToken
+      }
+    }
+  );
+
+
+if (!response.ok) {
+  throw new Error("Session expired.");
+}
+
+
+currentUser =
+  await response.json();
+
+
+const isAdmin =
+  await verifyAdmin(
+    currentUser.email
+  );
+
+
+if (!isAdmin) {
+
+  logout();
+
+  return;
+}
+
+
+if (adminUserEmail) {
+
+  adminUserEmail.textContent =
+    currentUser.email;
+}
+
+
+showDashboard();
+
+await loadApplications();
+```
+
+} catch (error) {
+
+```
+console.error(
+  "Session restore error:",
+  error
+);
+
+logout();
+```
+
+}
+}
+
+// ======================================================
+// INICIALIZAÇÃO
+// ======================================================
+
+restoreSession();
