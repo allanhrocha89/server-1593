@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="description"
+content="Server 1593 - Administrative Panel"
+
+>
+
+  <title>Server 1593 · Admin</title>
+
+  <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+
+  <main class="admin-page">
+
+```
+<!-- LOGIN -->
+<section id="login-section" class="panel-section">
+
+  <div class="login-card">
+
+    <div class="login-header">
+      <div class="eyebrow">
+        SERVER 1593
+      </div>
+
+      <h1>
+        Painel Administrativo
+      </h1>
+
+      <p>
+        Acesso restrito aos administradores do Servidor 1593.
+      </p>
+    </div>
+
+    <form id="login-form">
+
+      <div class="field">
+
+        <label for="admin-email">
+          E-mail
+        </label>
+
+        <input
+          type="email"
+          id="admin-email"
+          autocomplete="email"
+          required
+        >
+
+      </div>
+
+      <div class="field">
+
+        <label for="admin-password">
+          Senha
+        </label>
+
+        <input
+          type="password"
+          id="admin-password"
+          autocomplete="current-password"
+          required
+        >
+
+      </div>
+
+      <button
+        type="submit"
+        class="primary-button"
+      >
+        Entrar
+      </button>
+
+      <div
+        id="login-message"
+        class="message"
+        aria-live="polite"
+      ></div>
+
+    </form>
+
+  </div>
+
+</section>
+
+
+<!-- DASHBOARD -->
+<section
+  id="dashboard-section"
+  class="panel-section"
+  hidden
+>
+
+  <header class="dashboard-header">
+
+    <div>
+
+      <div class="eyebrow">
+        SERVER 1593 · ADMIN
+      </div>
+
+      <h1>
+        Candidaturas
+      </h1>
+
+      <p id="admin-user-email"></p>
+
+    </div>
+
+    <button
+      type="button"
+      id="logout-button"
+      class="secondary-button"
+    >
+      Sair
+    </button>
+
+  </header>
+
+
+  <!-- ESTATÍSTICAS -->
+
+  <section class="stats-grid">
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Total
+      </span>
+
+      <strong id="stat-total">
+        0
+      </strong>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Pendentes
+      </span>
+
+      <strong id="stat-pending">
+        0
+      </strong>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Em análise
+      </span>
+
+      <strong id="stat-reviewing">
+        0
+      </strong>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Aprovadas
+      </span>
+
+      <strong id="stat-approved">
+        0
+      </strong>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Rejeitadas
+      </span>
+
+      <strong id="stat-rejected">
+        0
+      </strong>
+
+    </article>
+
+
+    <article class="stat-card">
+
+      <span class="stat-label">
+        Transferidas
+      </span>
+
+      <strong id="stat-transferred">
+        0
+      </strong>
+
+    </article>
+
+  </section>
+
+
+  <!-- FILTROS -->
+
+  <section class="filters-card">
+
+    <div class="filter-field">
+
+      <label for="search-input">
+        Pesquisar
+      </label>
+
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Nickname, código ou Discord"
+      >
+
+    </div>
+
+
+    <div class="filter-field">
+
+      <label for="status-filter">
+        Status
+      </label>
+
+      <select id="status-filter">
+
+        <option value="all">
+          Todos
+        </option>
+
+        <option value="pending">
+          Pendente
+        </option>
+
+        <option value="reviewing">
+          Em análise
+        </option>
+
+        <option value="approved">
+          Aprovado
+        </option>
+
+        <option value="rejected">
+          Rejeitado
+        </option>
+
+        <option value="transferred">
+          Transferido
+        </option>
+
+        <option value="cancelled">
+          Cancelado
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <button
+      type="button"
+      id="refresh-button"
+      class="secondary-button"
+    >
+      Atualizar
+    </button>
+
+  </section>
+
+
+  <!-- LISTA -->
+
+  <section class="applications-card">
+
+    <div class="section-header">
+
+      <div>
+
+        <div class="eyebrow">
+          APPLICATIONS
+        </div>
+
+        <h2>
+          Inscrições recebidas
+        </h2>
+
+      </div>
+
+      <span id="applications-count">
+        0 inscrições
+      </span>
+
+    </div>
+
+
+    <div
+      id="applications-message"
+      class="message"
+      aria-live="polite"
+    ></div>
+
+
+    <div class="table-wrapper">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>
+              Código
+            </th>
+
+            <th>
+              Nickname
+            </th>
+
+            <th>
+              Servidor
+            </th>
+
+            <th>
+              Power
+            </th>
+
+            <th>
+              Aliança
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Data
+            </th>
+
+            <th>
+              Ação
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="applications-table-body">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </section>
+
+
+  <!-- DETALHES -->
+
+  <section
+    id="application-details"
+    class="details-card"
+    hidden
+  >
+
+    <div class="section-header">
+
+      <div>
+
+        <div class="eyebrow">
+          APPLICATION DETAILS
+        </div>
+
+        <h2 id="details-title">
+          Detalhes da candidatura
+        </h2>
+
+      </div>
+
+      <button
+        type="button"
+        id="close-details-button"
+        class="secondary-button"
+      >
+        Fechar
+      </button>
+
+    </div>
+
+
+    <div
+      id="details-content"
+      class="details-content"
+    >
+
+    </div>
+
+
+    <div class="admin-actions">
+
+      <div class="field">
+
+        <label for="details-status">
+          Status da candidatura
+        </label>
+
+        <select id="details-status">
+
+          <option value="pending">
+            Pendente
+          </option>
+
+          <option value="reviewing">
+            Em análise
+          </option>
+
+          <option value="approved">
+            Aprovado
+          </option>
+
+          <option value="rejected">
+            Rejeitado
+          </option>
+
+          <option value="transferred">
+            Transferido
+          </option>
+
+          <option value="cancelled">
+            Cancelado
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="field">
+
+        <label for="admin-notes">
+          Observações administrativas
+        </label>
+
+        <textarea
+          id="admin-notes"
+          rows="5"
+          placeholder="Adicione observações internas sobre esta candidatura..."
+        ></textarea>
+
+      </div>
+
+
+      <button
+        type="button"
+        id="save-application-button"
+        class="primary-button"
+      >
+        Salvar alterações
+      </button>
+
+
+      <div
+        id="save-message"
+        class="message"
+        aria-live="polite"
+      ></div>
+
+    </div>
+
+  </section>
+
+</section>
+```
+
+  </main>
+
+  <script src="admin.js"></script>
+
+</body>
+</html>
