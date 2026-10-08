@@ -350,7 +350,7 @@ if (form) {
 
     try {
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/rpc/submit_application`,
+        SUPABASE_URL + "/rest/v1/rpc/submit_application",
         {
           method: "POST",
 
@@ -358,7 +358,7 @@ if (form) {
             "Content-Type": "application/json",
             "apikey": SUPABASE_ANON_KEY,
             "Authorization":
-              `Bearer ${SUPABASE_ANON_KEY}`
+              "Bearer " + SUPABASE_ANON_KEY
           },
 
           body: JSON.stringify({
@@ -418,11 +418,9 @@ if (form) {
       }
 
       if (message) {
-        message.innerHTML = `
-          <strong>${currentMessages.success}</strong><br>
-          ${currentMessages.code}
-          <strong>${applicationCode}</strong>
-        `;
+        message.innerHTML =
+  "<strong>" + currentMessages.success + "</strong><br>" +
+  currentMessages.code + " <strong>" + applicationCode + "</strong>";
 
         message.scrollIntoView({
           behavior: "smooth",
@@ -573,7 +571,7 @@ async function checkApplicationStatus() {
   try {
 
     const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/rpc/check_application_status`,
+      SUPABASE_URL + "/rest/v1/rpc/check_application_status",
       {
         method: "POST",
 
@@ -581,7 +579,7 @@ async function checkApplicationStatus() {
           "Content-Type": "application/json",
           "apikey": SUPABASE_ANON_KEY,
           "Authorization":
-            `Bearer ${SUPABASE_ANON_KEY}`
+            "Bearer " + SUPABASE_ANON_KEY
         },
 
         body: JSON.stringify({
