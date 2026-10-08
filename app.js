@@ -14,6 +14,7 @@ const translations = {
     info_eyebrow:"SERVER 1593",info_title:"Informações para transferência",rule1_title:"Dados corretos",rule1_text:"Informe dados reais e atualizados para facilitar a análise da sua candidatura.",rule2_title:"Grupos",rule2_text:"Se estiver transferindo com amigos, informe todos os jogadores que fazem parte do seu grupo.",rule3_title:"Análise",rule3_text:"O envio da inscrição não garante a transferência. Cada candidatura será analisada individualmente.",footer:"Transfer Applications",
     nickname_ph:"Seu nome no jogo",discord_ph:"Seu usuário",alliance_ph:"Nome da aliança",profession_ph:"Profissão / especialidade",desired_ph:"Nome da aliança",friends_ph:"Liste os nicknames ou membros do grupo",optional:"Opcional",contact_ph:"Discord / outro contato",comments_ph:"Há algo que devemos saber?"
   },
+
   en: {
     nav_home:"Home",nav_apply:"Apply",nav_rules:"Information",nav_cta:"Apply Now",
     eyebrow:"SERVER 1593 · TRANSFER CENTER",hero_title:"Your next chapter<br><span>starts here.</span>",
@@ -26,6 +27,7 @@ const translations = {
     info_eyebrow:"SERVER 1593",info_title:"Transfer Information",rule1_title:"Accurate data",rule1_text:"Provide accurate and up-to-date information to help with the application review.",rule2_title:"Groups",rule2_text:"If you are transferring with friends, list all players who are part of your group.",rule3_title:"Review",rule3_text:"Submitting an application does not guarantee a transfer. Each application will be reviewed individually.",footer:"Transfer Applications",
     nickname_ph:"Your in-game name",discord_ph:"Your username",alliance_ph:"Alliance name",profession_ph:"Profession / specialty",desired_ph:"Alliance name",friends_ph:"List nicknames or group members",optional:"Optional",contact_ph:"Discord / other contact",comments_ph:"Anything we should know?"
   },
+
   es: {
     nav_home:"Inicio",nav_apply:"Inscripción",nav_rules:"Información",nav_cta:"Inscribirse",
     eyebrow:"SERVER 1593 · TRANSFER CENTER",hero_title:"Tu próximo capítulo<br><span>comienza aquí.</span>",
@@ -45,53 +47,138 @@ const formLang = document.querySelector("#form-language");
 
 function setLanguage(lang){
   const t = translations[lang];
+
   document.documentElement.lang = lang === "pt" ? "pt-BR" : lang;
+
   document.querySelectorAll("[data-i18n]").forEach(el => {
     const key = el.dataset.i18n;
     if (t[key] !== undefined) el.innerHTML = t[key];
   });
+
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     const key = el.dataset.i18nPlaceholder;
     if (t[key] !== undefined) el.placeholder = t[key];
   });
+
   langSelect.value = lang;
   formLang.value = lang;
+
   localStorage.setItem("transfer_language", lang);
 }
+
 setLanguage(localStorage.getItem("transfer_language") || "pt");
-langSelect.addEventListener("change", e => setLanguage(e.target.value));
+
+langSelect.addEventListener("change", e => {
+  setLanguage(e.target.value);
+});
 
 const form = document.querySelector("#application-form");
 const message = document.querySelector("#form-message");
 
 form.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const lang = formLang.value;
-  const messages = {
-    pt:["Enviando inscrição...","Inscrição recebida. A equipe responsável analisará seus dados."],
-    en:["Submitting application...","Application received. The responsible team will review your information."],
-    es:["Enviando inscripción...","Inscripción recibida. El equipo responsable revisará tus datos."]
-  };
-  message.textContent = messages[lang][0];
 
-  if (SUPABASE_URL.startsWith("YOUR_") || SUPABASE_ANON_KEY.startsWith("YOUR_")) {
+  event.preventDefault();
+
+  const lang = formLang.value;
+
+  const messages = {
+    pt: {
+      sending: "Enviando inscrição...",
+      success: "Inscrição recebida com sucesso!",
+      code: "Seu código de acompanhamento é:",
+      save: "Guarde este código para consultar o status da sua inscrição.",
+      error: "Não foi possível enviar. Tente novamente."
+    },
+
+    en: {
+      sending: "Submitting application...",
+      success: "Application received successfully!",
+      code: "Your application tracking code is:",
+      save: "Save this code to check the status of your application.",
+      error: "Could not submit. Please try again."
+    },
+
+    es: {
+      sending: "Enviando inscripción...",
+      success: "¡Inscripción recibida correctamente!",
+      code: "Tu código de seguimiento es:",
+      save: "Guarda este código para consultar el estado de tu inscripción.",
+      error: "No fue posible enviar. Inténtalo de nuevo."
+    }
+  };
+
+  message.textContent = messages[lang].sending;
+
+  if (
+    SUPABASE_URL.startsWith("YOUR_") ||
+    SUPABASE_ANON_KEY.startsWith("YOUR_")
+  ) {
     message.textContent = "Configure Supabase in app.js before publishing.";
     return;
   }
 
-  const data = Object.fromEntries(new FormData(form).entries());
+  const data = Object.fromEntries(
+    new FormData(form).entries()
+  );
+
   try {
-    const response = await fetch(`${SUPABASE_URL}/rest/v1/applications`, {
-      method:"POST",
-      headers:{"Content-Type":"application/json","apikey":SUPABASE_ANON_KEY,"Authorization":`Bearer ${SUPABASE_ANON_KEY}`,"Prefer":"return=minimal"},
-      body:JSON.stringify(data)
-    });
-    if(!response.ok) throw new Error(await response.text());
+
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/applications`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_ANON_KEY,
+          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
+          "Prefer": "return=representation"
+        },
+
+        body: JSON.stringify(data)
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    const result = await response.json();
+
+    const application = result[0];
+
+    if (!application || !application.application_code) {
+      throw new Error(
+        "Application created but tracking code was not returned."
+      );
+    }
+
+    const applicationCode = application.application_code;
+
     form.reset();
+
     formLang.value = lang;
-    message.textContent = messages[lang][1];
+
+    message.innerHTML = `
+      <strong>${messages[lang].success}</strong>
+      <br><br>
+      ${messages[lang].code}
+      <br>
+      <strong style="
+        display:inline-block;
+        margin-top:8px;
+        font-size:1.5rem;
+        letter-spacing:2px;
+      ">${applicationCode}</strong>
+      <br><br>
+      ${messages[lang].save}
+    `;
+
   } catch(error) {
+
     console.error(error);
-    message.textContent = lang === "pt" ? "Não foi possível enviar. Tente novamente." : lang === "en" ? "Could not submit. Please try again." : "No fue posible enviar. Inténtalo de nuevo.";
+
+    message.textContent = messages[lang].error;
   }
+
 });
