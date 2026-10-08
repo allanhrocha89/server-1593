@@ -1,3 +1,4 @@
+```javascript
 const SUPABASE_URL = "https://tctbfrljloakqfrvtghf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4mU1Xs4dabKVcvVjtJZWgA_sNGYlE0U";
 
@@ -271,7 +272,8 @@ function setLanguage(lang) {
   localStorage.setItem("transfer_language", lang);
 }
 
-const savedLanguage = localStorage.getItem("transfer_language") || "pt";
+const savedLanguage =
+  localStorage.getItem("transfer_language") || "pt";
 
 setLanguage(savedLanguage);
 
@@ -291,175 +293,157 @@ const message = document.querySelector("#form-message");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  const lang = formLang.value;
+    const lang =
+      formLang?.value ||
+      localStorage.getItem("transfer_language") ||
+      "pt";
 
-  const messages = {
-    pt: {
-      sending: "Enviando inscrição...",
-      success: "Inscrição recebida com sucesso!",
-      code: "Seu código de candidatura é:",
-      error: "Não foi possível enviar. Tente novamente."
-    },
-    en: {
-      sending: "Submitting application...",
-      success: "Application received successfully!",
-      code: "Your application code is:",
-      error: "Could not submit. Please try again."
-    },
-    es: {
-      sending: "Enviando inscripción...",
-      success: "¡Inscripción recibida con éxito!",
-      code: "Tu código de solicitud es:",
-      error: "No fue posible enviar. Inténtalo de nuevo."
-    }
-  };
+    const messages = {
+      pt: {
+        sending: "Enviando inscrição...",
+        success: "Inscrição recebida com sucesso!",
+        code: "Seu código de candidatura é:",
+        error: "Não foi possível enviar. Tente novamente."
+      },
 
-  const currentMessages = messages[lang] || messages.pt;
+      en: {
+        sending: "Submitting application...",
+        success: "Application received successfully!",
+        code: "Your application code is:",
+        error: "Could not submit. Please try again."
+      },
 
-  message.textContent = currentMessages.sending;
-
-  if (
-    SUPABASE_URL.startsWith("YOUR_") ||
-    SUPABASE_ANON_KEY.startsWith("YOUR_")
-  ) {
-    message.textContent = "Configure Supabase in app.js before publishing.";
-    return;
-  }
-
-  const data = Object.fromEntries(new FormData(form).entries());
-
-  try {
-    const response = await fetch(
-      `${SUPABASE_URL}/rest/v1/rpc/submit_application`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify({
-          p_nickname: data.nickname,
-          p_discord: data.discord,
-          p_current_server: data.current_server,
-          p_current_alliance: data.current_alliance || "",
-          p_power: data.power,
-          p_kills: data.kills || "",
-          p_profession: data.profession || "",
-          p_desired_alliance: data.desired_alliance || "",
-          p_friends: data.friends || "",
-          p_squad_1: data.squad_1 || "",
-          p_squad_2: data.squad_2 || "",
-          p_squad_3: data.squad_3 || "",
-          p_contact: data.contact || "",
-          p_comments: data.comments || "",
-          p_language: data.language || "pt"
-        })
+      es: {
+        sending: "Enviando inscripción...",
+        success: "¡Inscripción recibida con éxito!",
+        code: "Tu código de solicitud es:",
+        error: "No fue posible enviar. Inténtalo de nuevo."
       }
-    );
+    };
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText);
+    const currentMessages =
+      messages[lang] || messages.pt;
+
+    if (message) {
+      message.textContent =
+        currentMessages.sending;
     }
-
-    const result = await response.json();
-
-    const applicationCode = result?.[0]?.application_code;
-
-    if (!applicationCode) {
-      throw new Error("Application code was not returned.");
-    }
-
-    form.reset();
-
-    formLang.value = lang;
-
-    message.innerHTML = `
-      <strong>${currentMessages.success}</strong><br>
-      ${currentMessages.code}
-      <strong>${applicationCode}</strong>
-    `;
-
-  } catch (error) {
-    console.error("Application submission error:", error);
-
-    message.textContent = currentMessages.error;
-  }
-});
-    message.textContent = messages[lang][0];
 
     if (
       SUPABASE_URL.startsWith("YOUR_") ||
       SUPABASE_ANON_KEY.startsWith("YOUR_")
     ) {
-      message.textContent =
-        "Configure Supabase in app.js before publishing.";
+      if (message) {
+        message.textContent =
+          "Configure Supabase in app.js before publishing.";
+      }
+
       return;
     }
 
-    const data = Object.fromEntries(
-      new FormData(form).entries()
-    );
+    const data =
+      Object.fromEntries(
+        new FormData(form).entries()
+      );
 
     try {
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/applications`,
+        `${SUPABASE_URL}/rest/v1/rpc/submit_application`,
         {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
             "apikey": SUPABASE_ANON_KEY,
-            "Authorization": `Bearer ${SUPABASE_ANON_KEY}`,
-            "Prefer": "return=representation"
+            "Authorization":
+              `Bearer ${SUPABASE_ANON_KEY}`
           },
-          body: JSON.stringify(data)
+
+          body: JSON.stringify({
+            p_nickname: data.nickname || "",
+            p_discord: data.discord || "",
+            p_current_server:
+              data.current_server || "",
+            p_current_alliance:
+              data.current_alliance || "",
+            p_power: data.power || "",
+            p_kills: data.kills || "",
+            p_profession:
+              data.profession || "",
+            p_desired_alliance:
+              data.desired_alliance || "",
+            p_friends:
+              data.friends || "",
+            p_squad_1:
+              data.squad_1 || "",
+            p_squad_2:
+              data.squad_2 || "",
+            p_squad_3:
+              data.squad_3 || "",
+            p_contact:
+              data.contact || "",
+            p_comments:
+              data.comments || "",
+            p_language:
+              data.language || lang
+          })
         }
       );
 
       if (!response.ok) {
-        throw new Error(await response.text());
+        const errorText =
+          await response.text();
+
+        throw new Error(errorText);
       }
 
-      const result = await response.json();
+      const result =
+        await response.json();
 
-      const application = result[0];
+      const applicationCode =
+        result?.[0]?.application_code;
 
-      if (!application || !application.application_code) {
-        throw new Error("Application code was not returned.");
+      if (!applicationCode) {
+        throw new Error(
+          "Application code was not returned."
+        );
       }
-
-      const code = application.application_code;
 
       form.reset();
 
-      formLang.value = lang;
+      if (formLang) {
+        formLang.value = lang;
+      }
 
-      message.innerHTML = `
-        ${messages[lang][1]}
-        <strong>${code}</strong><br>
-        <small>${messages[lang][2]}</small>
-      `;
+      if (message) {
+        message.innerHTML = `
+          <strong>${currentMessages.success}</strong><br>
+          ${currentMessages.code}
+          <strong>${applicationCode}</strong>
+        `;
 
-      message.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+        message.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+
+      console.log(
+        "Application submitted successfully:",
+        applicationCode
+      );
 
     } catch (error) {
-      console.error(error);
+      console.error(
+        "Application submission error:",
+        error
+      );
 
-      if (lang === "pt") {
+      if (message) {
         message.textContent =
-          "Não foi possível enviar a inscrição. Tente novamente.";
-      } else if (lang === "en") {
-        message.textContent =
-          "Could not submit the application. Please try again.";
-      } else {
-        message.textContent =
-          "No fue posible enviar la solicitud. Inténtalo de nuevo.";
+          currentMessages.error;
       }
     }
   });
@@ -470,12 +454,24 @@ if (form) {
 // CONSULTA DE STATUS
 // ======================================================
 
-const statusCodeInput = document.querySelector("#application-code");
-const statusButton = document.querySelector("#check-status");
-const statusMessage = document.querySelector("#status-message");
-const statusResult = document.querySelector("#status-result");
-const resultCode = document.querySelector("#result-code");
-const resultStatus = document.querySelector("#result-status");
+const statusCodeInput =
+  document.querySelector("#application-code");
+
+const statusButton =
+  document.querySelector("#check-status");
+
+const statusMessage =
+  document.querySelector("#status-message");
+
+const statusResult =
+  document.querySelector("#status-result");
+
+const resultCode =
+  document.querySelector("#result-code");
+
+const resultStatus =
+  document.querySelector("#result-status");
+
 
 const statusTranslations = {
   pt: {
@@ -486,9 +482,14 @@ const statusTranslations = {
     transferred: "Transferido",
     cancelled: "Cancelado",
 
-    searching: "Consultando inscrição...",
-    notFound: "Não encontramos uma inscrição com esse código.",
-    error: "Não foi possível consultar o status. Tente novamente."
+    searching:
+      "Consultando inscrição...",
+
+    notFound:
+      "Não encontramos uma inscrição com esse código.",
+
+    error:
+      "Não foi possível consultar o status. Tente novamente."
   },
 
   en: {
@@ -499,9 +500,14 @@ const statusTranslations = {
     transferred: "Transferred",
     cancelled: "Cancelled",
 
-    searching: "Checking application...",
-    notFound: "No application was found with this code.",
-    error: "Could not check the status. Please try again."
+    searching:
+      "Checking application...",
+
+    notFound:
+      "No application was found with this code.",
+
+    error:
+      "Could not check the status. Please try again."
   },
 
   es: {
@@ -512,14 +518,20 @@ const statusTranslations = {
     transferred: "Transferido",
     cancelled: "Cancelado",
 
-    searching: "Consultando solicitud...",
-    notFound: "No encontramos una solicitud con este código.",
-    error: "No fue posible consultar el estado. Inténtalo de nuevo."
+    searching:
+      "Consultando solicitud...",
+
+    notFound:
+      "No encontramos una solicitud con este código.",
+
+    error:
+      "No fue posible consultar el estado. Inténtalo de nuevo."
   }
 };
 
 
 async function checkApplicationStatus() {
+
   if (
     !statusCodeInput ||
     !statusMessage ||
@@ -529,17 +541,22 @@ async function checkApplicationStatus() {
   }
 
   const lang =
-    localStorage.getItem("transfer_language") || "pt";
+    localStorage.getItem("transfer_language") ||
+    "pt";
 
-  const t = statusTranslations[lang];
+  const t =
+    statusTranslations[lang] ||
+    statusTranslations.pt;
 
-  const code = statusCodeInput.value
-    .trim()
-    .toUpperCase();
+  const code =
+    statusCodeInput.value
+      .trim()
+      .toUpperCase();
 
   statusResult.hidden = true;
 
   if (!code) {
+
     statusMessage.textContent =
       lang === "pt"
         ? "Digite o código da sua inscrição."
@@ -550,18 +567,23 @@ async function checkApplicationStatus() {
     return;
   }
 
-  statusMessage.textContent = t.searching;
+  statusMessage.textContent =
+    t.searching;
 
   try {
+
     const response = await fetch(
       `${SUPABASE_URL}/rest/v1/rpc/check_application_status`,
       {
         method: "POST",
+
         headers: {
           "Content-Type": "application/json",
           "apikey": SUPABASE_ANON_KEY,
-          "Authorization": `Bearer ${SUPABASE_ANON_KEY}`
+          "Authorization":
+            `Bearer ${SUPABASE_ANON_KEY}`
         },
+
         body: JSON.stringify({
           lookup_code: code
         })
@@ -569,56 +591,95 @@ async function checkApplicationStatus() {
     );
 
     if (!response.ok) {
-      throw new Error(await response.text());
+      throw new Error(
+        await response.text()
+      );
     }
 
-    const result = await response.json();
+    const result =
+      await response.json();
 
-    if (!result || result.length === 0) {
-      statusMessage.textContent = t.notFound;
+    if (
+      !result ||
+      result.length === 0
+    ) {
+      statusMessage.textContent =
+        t.notFound;
+
       return;
     }
 
-    const application = result[0];
+    const application =
+      result[0];
 
     const translatedStatus =
-      t[application.status] || application.status;
+      t[application.status] ||
+      application.status;
 
-    resultCode.textContent =
-      application.application_code;
+    if (resultCode) {
+      resultCode.textContent =
+        application.application_code;
+    }
 
-    resultStatus.textContent =
-      translatedStatus;
+    if (resultStatus) {
+      resultStatus.textContent =
+        translatedStatus;
+    }
 
     statusResult.hidden = false;
 
     statusMessage.textContent = "";
 
   } catch (error) {
-    console.error(error);
+
+    console.error(
+      "Status lookup error:",
+      error
+    );
 
     statusResult.hidden = true;
-    statusMessage.textContent = t.error;
+
+    statusMessage.textContent =
+      t.error;
   }
 }
 
 
+// ======================================================
+// BOTÃO DE CONSULTA DE STATUS
+// ======================================================
+
 if (statusButton) {
+
   statusButton.addEventListener(
     "click",
-    checkApplicationStatus
+    (event) => {
+
+      event.preventDefault();
+
+      checkApplicationStatus();
+    }
   );
 }
 
 
+// ======================================================
+// ENTER NO CAMPO DE CÓDIGO
+// ======================================================
+
 if (statusCodeInput) {
+
   statusCodeInput.addEventListener(
     "keydown",
     (event) => {
+
       if (event.key === "Enter") {
+
         event.preventDefault();
+
         checkApplicationStatus();
       }
     }
   );
 }
+```
