@@ -701,3 +701,119 @@ label[for="admin-notes"] {
     font-size: 14px;
     font-weight: 600;
 }
+
+/* ======================================================
+   CONTROLE DE INSCRIÇÕES
+====================================================== */
+
+.registration-control {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 25px;
+    padding: 26px 28px;
+    background: linear-gradient(135deg, #111827, #101b20);
+    border: 1px solid #263b3a;
+    border-radius: 16px;
+}
+
+.registration-info {
+    min-width: 0;
+}
+
+.registration-control h2 {
+    margin: 10px 0;
+    color: #ffffff;
+    font-size: 22px;
+}
+
+.registration-control p {
+    color: #9ca3af;
+    line-height: 1.5;
+}
+
+.registration-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    padding: 9px 13px;
+    border: 1px solid #374151;
+    border-radius: 999px;
+    background: #0b1220;
+    font-size: 13px;
+}
+
+.registration-indicator {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #9ca3af;
+}
+
+.registration-status.is-open {
+    color: #86efac;
+    border-color: #166534;
+}
+
+.registration-status.is-open .registration-indicator {
+    background: #22c55e;
+    box-shadow: 0 0 12px #22c55e88;
+}
+
+.registration-status.is-closed {
+    color: #fca5a5;
+    border-color: #7f1d1d;
+}
+
+.registration-status.is-closed .registration-indicator {
+    background: #ef4444;
+    box-shadow: 0 0 12px #ef444488;
+}
+
+.registration-actions {
+    width: min(100%, 260px);
+    flex-shrink: 0;
+}
+
+#toggle-registrations-button {
+    width: 100%;
+    min-height: 48px;
+    background: #65a30d;
+    color: #ffffff;
+}
+
+#toggle-registrations-button:hover:not(:disabled) {
+    background: #4d7c0f;
+}
+
+#toggle-registrations-button.is-close-action {
+    background: #991b1b;
+}
+
+#toggle-registrations-button.is-close-action:hover:not(:disabled) {
+    background: #b91c1c;
+}
+
+#toggle-registrations-button:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+#registration-message {
+    margin-bottom: 0;
+}
+
+@media (max-width: 800px) {
+    .registration-control {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 22px;
+    }
+
+    .registration-actions {
+        width: 100%;
+    }
+}
