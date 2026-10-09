@@ -124,7 +124,35 @@ content="Server 1593 - Administrative Panel"
     </button>
 
   </header>
+<!-- CONTROLE DE INSCRIÇÕES -->
+<section class="registration-control" aria-labelledby="registration-title">
+  <div class="registration-info">
+    <div class="eyebrow">CONFIGURAÇÕES DO SERVIDOR</div>
+    <h2 id="registration-title">Controle de inscrições</h2>
 
+    <p id="registration-description">
+      Verificando o status das inscrições...
+    </p>
+
+    <div id="registration-status" class="registration-status" aria-live="polite">
+      <span class="registration-indicator"></span>
+      <strong id="registration-status-text">Carregando...</strong>
+    </div>
+  </div>
+
+  <div class="registration-actions">
+    <button
+      type="button"
+      id="toggle-registrations-button"
+      class="primary-button"
+      disabled
+    >
+      Carregando...
+    </button>
+
+    <p id="registration-message" class="message" aria-live="polite"></p>
+  </div>
+</section>
 
   <!-- ESTATÍSTICAS -->
 
