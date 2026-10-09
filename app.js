@@ -11,7 +11,7 @@ const translations = {
     nav_home: "Início",
     nav_apply: "Inscrição",
     nav_rules: "Informações",
-    nav_status: "Acompanhar inscrição",
+    nav_status: "Acompanhar",
     nav_cta: "Inscrever-se",
     eyebrow: "SERVER 1593 · TRANSFER CENTER",
     hero_title: "Seu próximo capítulo<br><span>começa aqui.</span>",
@@ -19,12 +19,18 @@ const translations = {
     hero_button: "Começar inscrição",
     status_label: "STATUS DA TRANSFERÊNCIA",
     status_open: "INSCRIÇÕES ABERTAS",
+    status_closed: "INSCRIÇÕES FECHADAS",
+    status_loading: "VERIFICANDO STATUS...",
+    status_desc_open: "Estamos recebendo novas candidaturas para o Servidor 1593.",
+    status_desc_closed: "O recebimento de novas candidaturas está temporariamente suspenso.",
+    status_desc_error: "Não foi possível verificar o status. Novos envios permanecem bloqueados por segurança.",
+    status_button: "Acompanhar inscrição",
     stat_server: "Servidor",
     stat_languages: "Idiomas",
     stat_community: "Comunidade",
     application_eyebrow: "APPLICATION",
     application_title: "Conte-nos sobre sua conta",
-    application_lead: "Preencha todas as informações obrigatórias abaixo. Você pode alterar o idioma a qualquer momento.",
+    application_lead: "Preencha as informações abaixo. Você pode alterar o idioma a qualquer momento.",
     nickname: "Nickname *",
     discord: "Discord *",
     current_server: "Servidor atual *",
@@ -45,6 +51,10 @@ const translations = {
     seat_white: "Branco",
     comments: "Informações adicionais (opcional)",
     submit: "Enviar inscrição",
+    closed_title: "Inscrições temporariamente fechadas",
+    closed_message: "No momento, não estamos recebendo novas candidaturas para transferência ao Servidor 1593. Acompanhe esta página para saber quando as inscrições serão reabertas.",
+    open_button: "Abrir inscrições",
+    close_button: "Fechar inscrições",
     info_eyebrow: "SERVER 1593",
     info_title: "Informações para transferência",
     rule1_title: "Dados corretos",
@@ -65,13 +75,12 @@ const translations = {
     friends_ph: "Liste os nicknames ou escreva Nenhum",
     squad_ph: "Ex.: 250 para 250 milhões",
     comments_ph: "Há algo que devemos saber? (opcional)",
-    status_button: "Acompanhar inscrição",
     status_eyebrow: "APPLICATION STATUS",
     status_title: "Acompanhe sua inscrição",
-    status_description: "Digite o código recebido após enviar sua candidatura para consultar o status.",
+    status_description: "Digite o código recebido após enviar sua inscrição para consultar o andamento.",
     status_code_label: "Código da inscrição",
     status_check: "Consultar status",
-    status_result_code: "Código",
+    status_result_code: "Código da inscrição",
     status_result_status: "Status"
   },
 
@@ -87,6 +96,12 @@ const translations = {
     hero_button: "Start Application",
     status_label: "TRANSFER STATUS",
     status_open: "APPLICATIONS OPEN",
+    status_closed: "APPLICATIONS CLOSED",
+    status_loading: "CHECKING STATUS...",
+    status_desc_open: "We are accepting new transfer applications for Server 1593.",
+    status_desc_closed: "New applications are temporarily paused.",
+    status_desc_error: "We could not verify the status. New submissions remain blocked for safety.",
+    status_button: "Track Application",
     stat_server: "Server",
     stat_languages: "Languages",
     stat_community: "Community",
@@ -113,6 +128,10 @@ const translations = {
     seat_white: "White",
     comments: "Additional information (optional)",
     submit: "Submit Application",
+    closed_title: "Applications Temporarily Closed",
+    closed_message: "We are not currently accepting new transfer applications to Server 1593. Keep an eye on this page for updates on when applications reopen.",
+    open_button: "Open Applications",
+    close_button: "Close Applications",
     info_eyebrow: "SERVER 1593",
     info_title: "Transfer Information",
     rule1_title: "Accurate data",
@@ -133,13 +152,12 @@ const translations = {
     friends_ph: "List nicknames or enter None",
     squad_ph: "Example: 250 means 250 million",
     comments_ph: "Anything we should know? (optional)",
-    status_button: "Track Application",
     status_eyebrow: "APPLICATION STATUS",
     status_title: "Track your application",
     status_description: "Enter the code you received after submitting your application to check its status.",
     status_code_label: "Application code",
     status_check: "Check Status",
-    status_result_code: "Code",
+    status_result_code: "Application code",
     status_result_status: "Status"
   },
 
@@ -155,6 +173,12 @@ const translations = {
     hero_button: "Comenzar inscripción",
     status_label: "ESTADO DE LA TRANSFERENCIA",
     status_open: "INSCRIPCIONES ABIERTAS",
+    status_closed: "INSCRIPCIONES CERRADAS",
+    status_loading: "VERIFICANDO ESTADO...",
+    status_desc_open: "Estamos recibiendo nuevas solicitudes de transferencia al Servidor 1593.",
+    status_desc_closed: "La recepción de nuevas solicitudes está temporalmente suspendida.",
+    status_desc_error: "No pudimos verificar el estado. Los nuevos envíos permanecen bloqueados por seguridad.",
+    status_button: "Consultar inscripción",
     stat_server: "Servidor",
     stat_languages: "Idiomas",
     stat_community: "Comunidad",
@@ -181,6 +205,10 @@ const translations = {
     seat_white: "Blanco",
     comments: "Información adicional (opcional)",
     submit: "Enviar inscripción",
+    closed_title: "Inscripciones temporalmente cerradas",
+    closed_message: "Actualmente no estamos aceptando nuevas solicitudes de transferencia al Servidor 1593. Sigue esta página para saber cuándo se reabrirán las inscripciones.",
+    open_button: "Abrir inscripciones",
+    close_button: "Cerrar inscripciones",
     info_eyebrow: "SERVER 1593",
     info_title: "Información para la transferencia",
     rule1_title: "Datos correctos",
@@ -201,13 +229,12 @@ const translations = {
     friends_ph: "Indica los nicknames o escribe Ninguno",
     squad_ph: "Ej.: 250 equivale a 250 millones",
     comments_ph: "¿Hay algo que debamos saber? (opcional)",
-    status_button: "Consultar inscripción",
     status_eyebrow: "ESTADO DE LA INSCRIPCIÓN",
     status_title: "Consulta tu inscripción",
     status_description: "Introduce el código recibido después de enviar tu solicitud para consultar su estado.",
     status_code_label: "Código de inscripción",
     status_check: "Consultar estado",
-    status_result_code: "Código",
+    status_result_code: "Código de inscripción",
     status_result_status: "Estado"
   }
 };
@@ -219,6 +246,10 @@ const translations = {
 const langSelect = document.querySelector("#language");
 const formLang = document.querySelector("#form-language");
 
+function getCurrentLanguage() {
+  return localStorage.getItem("transfer_language") || "pt";
+}
+
 function setLanguage(lang) {
   const selectedLang = translations[lang] ? lang : "pt";
   const t = translations[selectedLang];
@@ -228,41 +259,41 @@ function setLanguage(lang) {
 
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.dataset.i18n;
-
-    if (t[key] !== undefined) {
-      el.innerHTML = t[key];
-    }
+    if (t[key] !== undefined) el.innerHTML = t[key];
   });
 
   document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
     const key = el.dataset.i18nPlaceholder;
-
-    if (t[key] !== undefined) {
-      el.placeholder = t[key];
-    }
+    if (t[key] !== undefined) el.placeholder = t[key];
   });
 
-  if (langSelect) {
-    langSelect.value = selectedLang;
-  }
-
-  if (formLang) {
-    formLang.value = selectedLang;
-  }
+  if (langSelect) langSelect.value = selectedLang;
+  if (formLang) formLang.value = selectedLang;
 
   localStorage.setItem("transfer_language", selectedLang);
+
+  // Reaplica o status após trocar o idioma.
+  if (typeof currentRegistrationStatus === "boolean") {
+    renderPublicRegistrationStatus(currentRegistrationStatus);
+  }
 }
 
-const savedLanguage =
-  localStorage.getItem("transfer_language") || "pt";
-
+const savedLanguage = getCurrentLanguage();
 setLanguage(savedLanguage);
+
+if (langSelect) {
+  langSelect.addEventListener("change", (event) => {
+    setLanguage(event.target.value);
+  });
+}
 
 // ======================================================
 // CONTROLE DO STATUS DAS INSCRIÇÕES
 // ======================================================
 
 let isSubmittingApplication = false;
+let currentRegistrationStatus = null;
+let registrationStatusError = false;
 
 async function getPublicRegistrationStatus() {
   const response = await fetch(
@@ -274,7 +305,8 @@ async function getPublicRegistrationStatus() {
         "apikey": SUPABASE_ANON_KEY,
         "Authorization": "Bearer " + SUPABASE_ANON_KEY
       },
-      body: "{}"
+      body: "{}",
+      cache: "no-store"
     }
   );
 
@@ -294,126 +326,153 @@ async function getPublicRegistrationStatus() {
   return result;
 }
 
-function renderPublicRegistrationStatus(isOpen) {
-  const dot = document.querySelector("#public-status-dot");
-  const label = document.querySelector("#public-registration-status");
+function setFormAvailability(isOpen) {
+  const form = document.querySelector("#application-form");
+  const notice = document.querySelector("#registration-closed-notice");
+  const submitButton = form?.querySelector('button[type="submit"]');
 
-  const submitButton = document.querySelector(
-    "#application-form button[type='submit']"
-  );
+  if (!form) return;
 
-  const floatingButton = document.querySelector("#floating-apply");
+  // Bloqueia os campos visíveis quando fechado.
+  form.querySelectorAll("input:not([type='hidden']), select, textarea").forEach((field) => {
+    field.disabled = !isOpen;
+  });
 
-  const language =
-    localStorage.getItem("transfer_language") || "pt";
-
-  const messages = {
-    pt: {
-      open: "INSCRIÇÕES ABERTAS",
-      closed: "INSCRIÇÕES FECHADAS",
-      apply: "Inscrever-se",
-      closedButton: "Inscrições fechadas"
-    },
-    en: {
-      open: "APPLICATIONS OPEN",
-      closed: "APPLICATIONS CLOSED",
-      apply: "Apply Now",
-      closedButton: "Applications closed"
-    },
-    es: {
-      open: "INSCRIPCIONES ABIERTAS",
-      closed: "INSCRIPCIONES CERRADAS",
-      apply: "Inscribirse",
-      closedButton: "Inscripciones cerradas"
-    }
-  };
-
-  const text = messages[language] || messages.pt;
-
-  // Atualiza o status no cartão principal
-  if (label) {
-    label.textContent = isOpen ? text.open : text.closed;
-  }
-
-  if (dot) {
-    dot.classList.toggle("is-open", isOpen);
-    dot.classList.toggle("is-closed", !isOpen);
-  }
-
-  // Atualiza o botão de envio do formulário
   if (submitButton) {
     submitButton.disabled = !isOpen || isSubmittingApplication;
     submitButton.classList.toggle("registration-closed", !isOpen);
+
+    const t = translations[getCurrentLanguage()] || translations.pt;
+    submitButton.textContent = isOpen ? t.submit : t.status_closed;
   }
 
-  // Atualiza o botão flutuante
+  if (notice) notice.hidden = isOpen;
+
+  form.classList.toggle("form-registration-closed", !isOpen);
+}
+
+function renderPublicRegistrationStatus(isOpen) {
+  currentRegistrationStatus = isOpen;
+  registrationStatusError = false;
+
+  const t = translations[getCurrentLanguage()] || translations.pt;
+  const dot = document.querySelector("#public-status-dot");
+  const label = document.querySelector("#public-registration-status");
+  const description = document.querySelector("#public-status-description");
+  const floatingButton = document.querySelector("#floating-apply");
+  const floatingDot = document.querySelector("#floating-status-dot");
+  const floatingText = document.querySelector("#floating-status-text");
+  const floatingArrow = document.querySelector("#floating-arrow");
+
+  if (label) {
+    label.textContent = isOpen ? t.status_open : t.status_closed;
+  }
+
+  if (dot) {
+    dot.classList.remove("is-open", "is-closed", "is-loading");
+    dot.classList.add(isOpen ? "is-open" : "is-closed");
+  }
+
+  if (description) {
+    description.textContent = isOpen ? t.status_desc_open : t.status_desc_closed;
+  }
+
   if (floatingButton) {
-    floatingButton.classList.toggle("registration-closed", !isOpen);
+    floatingButton.classList.remove("is-open", "is-closed", "is-loading", "registration-closed");
+    floatingButton.classList.add(isOpen ? "is-open" : "is-closed");
 
-    floatingButton.textContent = isOpen
-      ? text.apply
-      : text.closedButton;
-
+    floatingButton.href = isOpen ? "#apply" : "#registration-closed-notice";
+    floatingButton.setAttribute("aria-disabled", String(!isOpen));
     floatingButton.setAttribute(
       "aria-label",
-      isOpen ? text.apply : text.closedButton
+      isOpen ? t.status_open : t.status_closed
     );
-
-    floatingButton.setAttribute(
-      "aria-disabled",
-      String(!isOpen)
-    );
-
-    floatingButton.href = isOpen ? "#apply" : "#status";
-
-    floatingButton.title = isOpen
-      ? text.apply
-      : text.closedButton;
+    floatingButton.title = isOpen ? t.status_open : t.status_closed;
   }
+
+  if (floatingDot) {
+    floatingDot.classList.toggle("is-open", isOpen);
+    floatingDot.classList.toggle("is-closed", !isOpen);
+  }
+
+  if (floatingText) {
+    floatingText.textContent = isOpen ? t.status_open : t.status_closed;
+  }
+
+  if (floatingArrow) {
+    floatingArrow.textContent = isOpen ? "↗" : "×";
+  }
+
+  setFormAvailability(isOpen);
+}
+
+function renderRegistrationStatusError() {
+  registrationStatusError = true;
+  currentRegistrationStatus = false;
+
+  const t = translations[getCurrentLanguage()] || translations.pt;
+  const dot = document.querySelector("#public-status-dot");
+  const label = document.querySelector("#public-registration-status");
+  const description = document.querySelector("#public-status-description");
+  const floatingButton = document.querySelector("#floating-apply");
+  const floatingDot = document.querySelector("#floating-status-dot");
+  const floatingText = document.querySelector("#floating-status-text");
+  const floatingArrow = document.querySelector("#floating-arrow");
+
+  if (dot) {
+    dot.classList.remove("is-open", "is-loading");
+    dot.classList.add("is-closed");
+  }
+
+  if (label) label.textContent = t.status_closed;
+  if (description) description.textContent = t.status_desc_error;
+
+  if (floatingButton) {
+    floatingButton.classList.remove("is-open", "is-loading");
+    floatingButton.classList.add("is-closed", "registration-closed");
+    floatingButton.href = "#registration-closed-notice";
+    floatingButton.setAttribute("aria-disabled", "true");
+    floatingButton.setAttribute("aria-label", t.status_closed);
+  }
+
+  if (floatingDot) {
+    floatingDot.classList.remove("is-open");
+    floatingDot.classList.add("is-closed");
+  }
+
+  if (floatingText) floatingText.textContent = t.status_closed;
+  if (floatingArrow) floatingArrow.textContent = "×";
+
+  setFormAvailability(false);
 }
 
 async function refreshPublicRegistrationStatus() {
   try {
     const isOpen = await getPublicRegistrationStatus();
-
     renderPublicRegistrationStatus(isOpen);
-
     return isOpen;
   } catch (error) {
     console.error("Erro ao consultar inscrições:", error);
-
-    // Em caso de falha, manter as inscrições bloqueadas.
-    renderPublicRegistrationStatus(false);
-
+    renderRegistrationStatusError();
     return false;
   }
 }
 
-// O clique do botão flutuante respeita o status atual.
 const floatingApplyButton = document.querySelector("#floating-apply");
 
 if (floatingApplyButton) {
   floatingApplyButton.addEventListener("click", (event) => {
-    const isClosed = floatingApplyButton.classList.contains(
-      "registration-closed"
-    );
-
-    if (isClosed) {
+    if (currentRegistrationStatus !== true || registrationStatusError) {
       event.preventDefault();
 
-      document.querySelector("#status")?.scrollIntoView({
+      const notice = document.querySelector("#registration-closed-notice");
+      if (notice) notice.hidden = false;
+
+      notice?.scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "center"
       });
     }
-  });
-}
-
-// Atualiza o texto do botão quando o idioma mudar.
-if (langSelect) {
-  langSelect.addEventListener("change", (event) => {
-    setLanguage(event.target.value);
-    refreshPublicRegistrationStatus();
   });
 }
 
@@ -428,14 +487,9 @@ if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (isSubmittingApplication) {
-      return;
-    }
+    if (isSubmittingApplication) return;
 
-    const lang =
-      (formLang && formLang.value) ||
-      localStorage.getItem("transfer_language") ||
-      "pt";
+    const lang = getCurrentLanguage();
 
     const messages = {
       pt: {
@@ -466,36 +520,26 @@ if (form) {
 
     const currentMessages = messages[lang] || messages.pt;
 
-    // Verifica o status mais recente antes de enviar.
-    const registrationsAreOpen =
-      await refreshPublicRegistrationStatus();
+    // Consulta novamente antes de enviar.
+    const registrationsAreOpen = await refreshPublicRegistrationStatus();
 
     if (!registrationsAreOpen) {
       if (message) {
         message.textContent = currentMessages.closed;
         message.className = "form-message";
       }
-
       return;
     }
 
     if (!form.reportValidity()) {
-      if (message) {
-        message.textContent = currentMessages.invalid;
-      }
-
+      if (message) message.textContent = currentMessages.invalid;
       return;
     }
 
     isSubmittingApplication = true;
 
-    const submitButton = form.querySelector(
-      'button[type="submit"]'
-    );
-
-    if (submitButton) {
-      submitButton.disabled = true;
-    }
+    const submitButton = form.querySelector('button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
 
     if (message) {
       message.textContent = currentMessages.sending;
@@ -503,16 +547,7 @@ if (form) {
     }
 
     try {
-      if (
-        SUPABASE_URL.startsWith("YOUR_") ||
-        SUPABASE_ANON_KEY.startsWith("YOUR_")
-      ) {
-        throw new Error("Configure o Supabase antes de publicar.");
-      }
-
-      const data = Object.fromEntries(
-        new FormData(form).entries()
-      );
+      const data = Object.fromEntries(new FormData(form).entries());
 
       const response = await fetch(
         SUPABASE_URL + "/rest/v1/rpc/submit_application",
@@ -557,11 +592,9 @@ if (form) {
       }
 
       const result = await response.json();
-
-      const applicationCode =
-        result && result[0]
-          ? result[0].application_code
-          : null;
+      const applicationCode = result && result[0]
+        ? result[0].application_code
+        : null;
 
       if (!applicationCode) {
         throw new Error("Application code was not returned.");
@@ -569,9 +602,7 @@ if (form) {
 
       form.reset();
 
-      if (formLang) {
-        formLang.value = lang;
-      }
+      if (formLang) formLang.value = lang;
 
       if (message) {
         message.replaceChildren();
@@ -580,32 +611,24 @@ if (form) {
         success.textContent = currentMessages.success;
 
         const codeText = document.createElement("span");
-        codeText.textContent =
-          currentMessages.code + " " + applicationCode;
+        codeText.textContent = currentMessages.code + " " + applicationCode;
 
         message.appendChild(success);
         message.appendChild(document.createElement("br"));
         message.appendChild(codeText);
 
-        message.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
+        message.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
-      console.log(
-        "Application submitted successfully:",
-        applicationCode
-      );
+      console.log("Application submitted successfully:", applicationCode);
 
     } catch (error) {
       console.error("Application submission error:", error);
 
       if (message) {
-        message.textContent =
-          error.message === "APPLICATIONS_CLOSED"
-            ? currentMessages.closed
-            : currentMessages.error;
+        message.textContent = error.message === "APPLICATIONS_CLOSED"
+          ? currentMessages.closed
+          : currentMessages.error;
 
         message.className = "form-message";
       }
@@ -619,6 +642,7 @@ if (form) {
 
 // ======================================================
 // CONSULTA DE STATUS DA CANDIDATURA
+// Continua disponível mesmo com novas inscrições fechadas.
 // ======================================================
 
 const statusCodeInput = document.querySelector("#application-code");
@@ -668,15 +692,10 @@ const statusTranslations = {
 };
 
 async function checkApplicationStatus() {
-  if (!statusCodeInput || !statusMessage || !statusResult) {
-    return;
-  }
+  if (!statusCodeInput || !statusMessage || !statusResult) return;
 
-  const lang =
-    localStorage.getItem("transfer_language") || "pt";
-
+  const lang = getCurrentLanguage();
   const t = statusTranslations[lang] || statusTranslations.pt;
-
   const code = statusCodeInput.value.trim().toUpperCase();
 
   statusResult.hidden = true;
@@ -698,15 +717,11 @@ async function checkApplicationStatus() {
           "apikey": SUPABASE_ANON_KEY,
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         },
-        body: JSON.stringify({
-          lookup_code: code
-        })
+        body: JSON.stringify({ lookup_code: code })
       }
     );
 
-    if (!response.ok) {
-      throw new Error(await response.text());
-    }
+    if (!response.ok) throw new Error(await response.text());
 
     const result = await response.json();
 
@@ -716,24 +731,16 @@ async function checkApplicationStatus() {
     }
 
     const application = result[0];
+    const translatedStatus = t[application.status] || application.status;
 
-    const translatedStatus =
-      t[application.status] || application.status;
-
-    if (resultCode) {
-      resultCode.textContent = application.application_code;
-    }
-
-    if (resultStatus) {
-      resultStatus.textContent = translatedStatus;
-    }
+    if (resultCode) resultCode.textContent = application.application_code;
+    if (resultStatus) resultStatus.textContent = translatedStatus;
 
     statusResult.hidden = false;
     statusMessage.textContent = "";
 
   } catch (error) {
     console.error("Status lookup error:", error);
-
     statusResult.hidden = true;
     statusMessage.textContent = t.error;
   }
@@ -756,7 +763,12 @@ if (statusCodeInput) {
 }
 
 // ======================================================
-// VERIFICAÇÃO INICIAL
+// INICIALIZAÇÃO E SINCRONIZAÇÃO
 // ======================================================
 
 refreshPublicRegistrationStatus();
+
+// Atualiza periodicamente para refletir mudanças feitas no painel.
+window.setInterval(() => {
+  refreshPublicRegistrationStatus();
+}, 30000);
