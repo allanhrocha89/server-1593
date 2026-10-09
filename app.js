@@ -264,6 +264,25 @@ function setLanguage(lang) {
   const selectedLang = translations[lang] ? lang : "pt";
   const t = translations[selectedLang];
 
+const transferBanner = document.querySelector("#transfer-banner");
+
+if (transferBanner) {
+  const banners = {
+    pt: "./images/banner-pt.jpeg",
+    en: "./images/banner-en.jpeg",
+    es: "./images/banner-es.jpeg"
+  };
+
+  transferBanner.src = banners[selectedLang] || banners.en;
+
+  const bannerAlt = {
+    pt: "Servidor 1593 — janela de transferência",
+    en: "Server 1593 — migration window open",
+    es: "Servidor 1593 — ventana de migración abierta"
+  };
+
+  transferBanner.alt = bannerAlt[selectedLang] || bannerAlt.en;
+}
   document.documentElement.lang =
     selectedLang === "pt" ? "pt-BR" : selectedLang;
 
