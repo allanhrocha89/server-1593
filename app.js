@@ -542,3 +542,82 @@ if (statusCodeInput) {
     }
   });
 }
+
+async function getPublicRegistrationStatus() {
+    const response = await fetch(
+        SUPABASE_URL + "/rest/v1/rpc/get_transfer_status",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "apikey": SUPABASE_ANON_KEY,
+                "Authorization": "Bearer " + SUPABASE_ANON_KEY
+            },
+            body: "{}"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Não foi possível consultar as inscrições.");
+    }
+
+    return Boolean(await response.json());
+}
+
+function renderPublicRegistrationStatus(isOpen) {
+    const dot = document.querySelector("#public-status-dot");
+    const label = document.querySelector("#public-registration-status");
+    const submitButton = document.querySelector(
+        "#application-form button[type='submit']"
+    );
+
+    const language = (
+        localStorage.getItem("transfer_language") || "pt"
+    ).toLowerCase().slice(0, 2);
+
+    const messages = {
+        pt: {
+            open: "INSCRIÇÕES ABERTAS",
+            closed: "INSCRIÇÕES FECHADAS"
+        },
+        en: {
+            open: "APPLICATIONS OPEN",
+            closed: "APPLICATIONS CLOSED"
+        },
+        es: {
+            open: "INSCRIPCIONES ABIERTAS",
+            closed: "INSCRIPCIONES CERRADAS"
+        }
+    };
+
+    const text = messages[language] || messages.pt;
+
+    if (label) {
+        label.textContent = isOpen ? text.open : text.closed;
+    }
+
+    if (dot) {
+        dot.classList.toggle("is-closed", !isOpen);
+        dot.classList.toggle("is-open", isOpen);
+    }
+
+    if (submitButton) {
+        submitButton.disabled = !isOpen;
+        submitButton.classList.toggle("registration-closed", !isOpen);
+    }
+}
+
+async function refreshPublicRegistrationStatus() {
+    try {
+        const isOpen = await getPublicRegistrationStatus();
+        renderPublicRegistrationStatus(isOpen);
+        return isOpen;
+    } catch (error) {
+        console.error("Erro ao consultar inscrições:", error);
+
+        // Em caso de falha na consulta, não permitir novo envio
+        // pela interface até confirmar que as inscrições estão abertas.
+        renderPublicRegistrationStatus(false);
+        return false;
+    }
+}
