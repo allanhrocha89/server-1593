@@ -272,7 +272,20 @@ const message = document.querySelector("#form-message");
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+const registrationsAreOpen =
+    await refreshPublicRegistrationStatus();
 
+if (!registrationsAreOpen) {
+    const message = document.querySelector("#form-message");
+
+    if (message) {
+        message.textContent =
+            "As inscrições estão fechadas no momento. Você ainda pode consultar o status de uma candidatura existente.";
+        message.className = "form-message";
+    }
+
+    return;
+}
     const lang =
       (formLang && formLang.value) ||
       localStorage.getItem("transfer_language") ||
@@ -621,3 +634,4 @@ async function refreshPublicRegistrationStatus() {
         return false;
     }
 }
+refreshPublicRegistrationStatus();
