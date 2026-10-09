@@ -9,7 +9,6 @@
   <title>Server 1593 · Transfer Center</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
-
 <body>
   <header class="nav">
     <div class="brand">
@@ -30,10 +29,7 @@
         <option value="en">EN</option>
         <option value="es">ES</option>
       </select>
-
-      <a class="nav-cta" href="#apply" data-i18n="nav_cta">
-        Inscrever-se
-      </a>
+      <a class="nav-cta" href="#apply" data-i18n="nav_cta">Inscrever-se</a>
     </div>
   </header>
 
@@ -59,33 +55,30 @@
           <a class="button primary" href="#apply" data-i18n="hero_button">
             Começar inscrição
           </a>
-
           <a class="button ghost" href="#status" data-i18n="status_button">
             Acompanhar inscrição
           </a>
         </div>
       </div>
 
-      <div class="hero-card">
-        <div
-          id="public-status-dot"
-          class="status-dot"
-          aria-hidden="true"
-        ></div>
+      <div class="hero-card" id="transfer-status-card">
+        <div class="hero-status-heading">
+          <span id="public-status-dot" class="status-dot is-loading" aria-hidden="true"></span>
+          <small data-i18n="status_label">STATUS DA TRANSFERÊNCIA</small>
+        </div>
 
-        <small data-i18n="status_label">
-          STATUS DA TRANSFERÊNCIA
-        </small>
-
-        <strong
-          id="public-registration-status"
-          data-i18n="status_open"
-          aria-live="polite"
-        >
-          INSCRIÇÕES ABERTAS
+        <strong id="public-registration-status" aria-live="polite">
+          Verificando status...
         </strong>
 
-        <span>Server 1593</span>
+        <span class="server-label">
+          <span class="server-symbol">1593</span>
+          <span>SERVER 1593</span>
+        </span>
+
+        <p id="public-status-description" class="status-description" aria-live="polite">
+          Verificando disponibilidade das inscrições.
+        </p>
       </div>
     </section>
 
@@ -94,12 +87,10 @@
         <strong>1593</strong>
         <span data-i18n="stat_server">Servidor</span>
       </div>
-
       <div>
         <strong>3</strong>
         <span data-i18n="stat_languages">Idiomas</span>
       </div>
-
       <div>
         <strong>24/7</strong>
         <span data-i18n="stat_community">Comunidade</span>
@@ -108,183 +99,106 @@
 
     <section id="apply" class="section application">
       <div class="section-heading">
-        <p class="eyebrow" data-i18n="application_eyebrow">
-          APPLICATION
-        </p>
-
-        <h2 data-i18n="application_title">
-          Conte-nos sobre sua conta
-        </h2>
-
+        <p class="eyebrow" data-i18n="application_eyebrow">APPLICATION</p>
+        <h2 data-i18n="application_title">Conte-nos sobre sua conta</h2>
         <p data-i18n="application_lead">
           Preencha as informações abaixo. Você pode alterar o idioma a qualquer momento.
         </p>
+      </div>
+
+      <div id="registration-closed-notice" class="registration-notice" hidden>
+        <span class="notice-icon" aria-hidden="true">!</span>
+        <div>
+          <h3 data-i18n="closed_title">Inscrições temporariamente fechadas</h3>
+          <p data-i18n="closed_message">
+            No momento, não estamos recebendo novas candidaturas para transferência ao Servidor 1593. Acompanhe esta página para saber quando as inscrições serão reabertas.
+          </p>
+        </div>
       </div>
 
       <form id="application-form" class="form-card">
         <div class="form-grid">
           <label>
             <span data-i18n="nickname">Nickname *</span>
-            <input
-              name="nickname"
-              required
-              maxlength="80"
-              data-i18n-placeholder="nickname_ph"
-              placeholder="Seu nome no jogo"
-            >
+            <input name="nickname" required maxlength="80"
+              data-i18n-placeholder="nickname_ph" placeholder="Seu nome no jogo">
           </label>
 
           <label>
             <span data-i18n="discord">Discord *</span>
-            <input
-              name="discord"
-              required
-              maxlength="80"
-              data-i18n-placeholder="discord_ph"
-              placeholder="Seu usuário"
-            >
+            <input name="discord" required maxlength="80"
+              data-i18n-placeholder="discord_ph" placeholder="Seu usuário">
           </label>
 
           <label>
             <span data-i18n="current_server">Servidor atual *</span>
-            <input
-              name="current_server"
-              type="number"
-              required
-              min="1"
-              step="1"
-              data-i18n-placeholder="current_server_ph"
-              placeholder="1587"
-            >
+            <input name="current_server" type="number" required min="1" step="1"
+              data-i18n-placeholder="current_server_ph" placeholder="1587">
           </label>
 
           <label>
             <span data-i18n="current_alliance">Aliança atual *</span>
-            <input
-              name="current_alliance"
-              required
-              maxlength="80"
-              data-i18n-placeholder="alliance_ph"
-              placeholder="Nome da aliança"
-            >
+            <input name="current_alliance" required maxlength="80"
+              data-i18n-placeholder="alliance_ph" placeholder="Nome da aliança">
           </label>
 
           <label>
             <span data-i18n="power">Power *</span>
-            <input
-              name="power"
-              required
-              maxlength="30"
-              data-i18n-placeholder="power_ph"
-              placeholder="185M"
-            >
+            <input name="power" required maxlength="30"
+              data-i18n-placeholder="power_ph" placeholder="185M">
           </label>
 
           <label>
             <span data-i18n="kills">Kills *</span>
-            <input
-              name="kills"
-              required
-              maxlength="30"
-              data-i18n-placeholder="kills_ph"
-              placeholder="1,234,567"
-            >
+            <input name="kills" required maxlength="30"
+              data-i18n-placeholder="kills_ph" placeholder="1,234,567">
           </label>
 
           <label>
             <span data-i18n="profession">Nível da profissão *</span>
-            <input
-              name="profession"
-              type="number"
-              required
-              min="0"
-              step="1"
-              data-i18n-placeholder="profession_ph"
-              placeholder="100"
-            >
+            <input name="profession" type="number" required min="0" step="1"
+              data-i18n-placeholder="profession_ph" placeholder="100">
           </label>
 
           <label>
             <span data-i18n="desired_alliance">Aliança desejada *</span>
-            <input
-              name="desired_alliance"
-              required
-              maxlength="80"
-              data-i18n-placeholder="desired_ph"
-              placeholder="Nome da aliança"
-            >
+            <input name="desired_alliance" required maxlength="80"
+              data-i18n-placeholder="desired_ph" placeholder="Nome da aliança">
           </label>
         </div>
 
         <label>
-          <span data-i18n="friends">
-            Amigos / membros do grupo que irão com você *
-          </span>
-
-          <textarea
-            name="friends"
-            rows="3"
-            required
+          <span data-i18n="friends">Amigos / membros do grupo que irão com você *</span>
+          <textarea name="friends" rows="3" required
             data-i18n-placeholder="friends_ph"
-            placeholder="Liste os nicknames ou escreva Nenhum"
-          ></textarea>
+            placeholder="Liste os nicknames ou escreva Nenhum"></textarea>
         </label>
 
         <div class="form-grid">
           <label>
             <span data-i18n="squad1">Poder do Squad 1 (milhões) *</span>
-            <input
-              name="squad_1"
-              type="number"
-              required
-              min="0"
-              step="any"
-              data-i18n-placeholder="squad_ph"
-              placeholder="250"
-            >
+            <input name="squad_1" type="number" required min="0" step="any"
+              data-i18n-placeholder="squad_ph" placeholder="250">
           </label>
 
           <label>
             <span data-i18n="squad2">Poder do Squad 2 (milhões) *</span>
-            <input
-              name="squad_2"
-              type="number"
-              required
-              min="0"
-              step="any"
-              data-i18n-placeholder="squad_ph"
-              placeholder="180"
-            >
+            <input name="squad_2" type="number" required min="0" step="any"
+              data-i18n-placeholder="squad_ph" placeholder="180">
           </label>
 
           <label>
             <span data-i18n="squad3">Poder do Squad 3 (milhões) *</span>
-            <input
-              name="squad_3"
-              type="number"
-              required
-              min="0"
-              step="any"
-              data-i18n-placeholder="squad_ph"
-              placeholder="120"
-            >
+            <input name="squad_3" type="number" required min="0" step="any"
+              data-i18n-placeholder="squad_ph" placeholder="120">
           </label>
 
           <label>
-            <span data-i18n="contact">
-              Cor do assento na última temporada *
-            </span>
-
+            <span data-i18n="contact">Cor do assento na última temporada *</span>
             <select name="contact" required>
-              <option
-                value=""
-                selected
-                disabled
-                data-i18n="seat_placeholder"
-              >
+              <option value="" selected disabled data-i18n="seat_placeholder">
                 Selecione uma cor
               </option>
-
               <option value="Dourado" data-i18n="seat_gold">Dourado</option>
               <option value="Roxo" data-i18n="seat_purple">Roxo</option>
               <option value="Azul" data-i18n="seat_blue">Azul</option>
@@ -294,52 +208,26 @@
         </div>
 
         <label>
-          <span data-i18n="comments">
-            Informações adicionais (opcional)
-          </span>
-
-          <textarea
-            name="comments"
-            rows="5"
+          <span data-i18n="comments">Informações adicionais (opcional)</span>
+          <textarea name="comments" rows="5"
             data-i18n-placeholder="comments_ph"
-            placeholder="Há algo que devemos saber?"
-          ></textarea>
+            placeholder="Há algo que devemos saber?"></textarea>
         </label>
 
-        <input
-          type="hidden"
-          name="language"
-          id="form-language"
-          value="pt"
-        >
+        <input type="hidden" name="language" id="form-language" value="pt">
 
-        <button
-          class="button primary submit"
-          type="submit"
-          data-i18n="submit"
-        >
+        <button class="button primary submit" type="submit" data-i18n="submit">
           Enviar inscrição
         </button>
 
-        <p
-          id="form-message"
-          class="form-message"
-          role="status"
-          aria-live="polite"
-        ></p>
+        <p id="form-message" class="form-message" role="status" aria-live="polite"></p>
       </form>
     </section>
 
     <section id="status" class="section status-section">
       <div class="section-heading">
-        <p class="eyebrow" data-i18n="status_eyebrow">
-          APPLICATION STATUS
-        </p>
-
-        <h2 data-i18n="status_title">
-          Acompanhe sua inscrição
-        </h2>
-
+        <p class="eyebrow" data-i18n="status_eyebrow">APPLICATION STATUS</p>
+        <h2 data-i18n="status_title">Acompanhe sua inscrição</h2>
         <p data-i18n="status_description">
           Digite o código recebido após enviar sua inscrição para consultar o andamento.
         </p>
@@ -347,49 +235,24 @@
 
       <div class="form-card status-card">
         <label for="application-code">
-          <span data-i18n="status_code_label">
-            Código da inscrição
-          </span>
-
-          <input
-            id="application-code"
-            type="text"
-            maxlength="10"
-            placeholder="1593-A7K29"
-            autocomplete="off"
-          >
+          <span data-i18n="status_code_label">Código da inscrição</span>
+          <input id="application-code" type="text" maxlength="10"
+            placeholder="1593-A7K29" autocomplete="off">
         </label>
 
-        <button
-          id="check-status"
-          class="button primary submit"
-          type="button"
-          data-i18n="status_check"
-        >
+        <button id="check-status" class="button primary submit" type="button" data-i18n="status_check">
           Consultar status
         </button>
 
-        <p
-          id="status-message"
-          class="form-message"
-          role="status"
-          aria-live="polite"
-        ></p>
+        <p id="status-message" class="form-message" role="status" aria-live="polite"></p>
 
         <div id="status-result" class="status-result" hidden>
           <div class="status-result-code">
-            <small data-i18n="status_result_code">
-              Código da inscrição
-            </small>
-
+            <small data-i18n="status_result_code">Código da inscrição</small>
             <strong id="result-code"></strong>
           </div>
-
           <div class="status-result-status">
-            <small data-i18n="status_result_status">
-              Status
-            </small>
-
+            <small data-i18n="status_result_status">Status</small>
             <strong id="result-status"></strong>
           </div>
         </div>
@@ -398,13 +261,8 @@
 
     <section id="rules" class="section rules">
       <div class="section-heading">
-        <p class="eyebrow" data-i18n="info_eyebrow">
-          SERVER 1593
-        </p>
-
-        <h2 data-i18n="info_title">
-          Informações para transferência
-        </h2>
+        <p class="eyebrow" data-i18n="info_eyebrow">SERVER 1593</p>
+        <h2 data-i18n="info_title">Informações para transferência</h2>
       </div>
 
       <div class="rule-grid">
@@ -415,7 +273,6 @@
             Informe dados reais e atualizados para facilitar a análise da sua candidatura.
           </p>
         </article>
-
         <article>
           <b>02</b>
           <h3 data-i18n="rule2_title">Grupos</h3>
@@ -423,7 +280,6 @@
             Se estiver transferindo com amigos, informe todos os jogadores que fazem parte do seu grupo.
           </p>
         </article>
-
         <article>
           <b>03</b>
           <h3 data-i18n="rule3_title">Análise</h3>
@@ -440,15 +296,15 @@
     <span data-i18n="footer">Transfer Applications</span>
   </footer>
 
-  <!-- BOTÃO FLUTUANTE DE INSCRIÇÃO -->
-  <a
-    id="floating-apply"
-    class="floating-apply"
-    href="#apply"
-    data-i18n="nav_cta"
-    aria-label="Inscrever-se no Server 1593"
-  >
-    Inscrever-se
+  <a id="floating-apply" class="floating-apply is-loading" href="#apply"
+    aria-label="Status das inscrições" aria-live="polite">
+    <span id="floating-status-dot" class="floating-status-dot" aria-hidden="true"></span>
+    <span class="floating-content">
+      <span class="floating-kicker">TRANSFER CENTER</span>
+      <strong id="floating-status-text">Verificando status...</strong>
+      <span class="floating-server">SERVER 1593</span>
+    </span>
+    <span id="floating-arrow" class="floating-arrow" aria-hidden="true">↗</span>
   </a>
 
   <script type="module" src="./app.js"></script>
