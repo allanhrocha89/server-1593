@@ -2,6 +2,10 @@
 const SUPABASE_URL = "https://tctbfrljloakqfrvtghf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4mU1Xs4dabKVcvVjtJZWgA_sNGYlE0U";
 
+// ======================================================
+// TRADUÇÕES
+// ======================================================
+
 const translations = {
   pt: {
     nav_home: "Início",
@@ -208,7 +212,6 @@ const translations = {
   }
 };
 
-
 // ======================================================
 // IDIOMA
 // ======================================================
@@ -258,9 +261,105 @@ setLanguage(savedLanguage);
 if (langSelect) {
   langSelect.addEventListener("change", (event) => {
     setLanguage(event.target.value);
+    refreshPublicRegistrationStatus();
   });
 }
 
+// ======================================================
+// CONTROLE DO STATUS DAS INSCRIÇÕES
+// ======================================================
+
+let isSubmittingApplication = false;
+
+async function getPublicRegistrationStatus() {
+  const response = await fetch(
+    SUPABASE_URL + "/rest/v1/rpc/get_transfer_status",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": "Bearer " + SUPABASE_ANON_KEY
+      },
+      body: "{}"
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      "Não foi possível consultar as inscrições: " +
+      await response.text()
+    );
+  }
+
+  const result = await response.json();
+
+  if (typeof result !== "boolean") {
+    throw new Error("O Supabase retornou um status inválido.");
+  }
+
+  return result;
+}
+
+function renderPublicRegistrationStatus(isOpen) {
+  const dot = document.querySelector("#public-status-dot");
+  const label = document.querySelector("#public-registration-status");
+  const submitButton = document.querySelector(
+    "#application-form button[type='submit']"
+  );
+
+  const language =
+    localStorage.getItem("transfer_language") || "pt";
+
+  const messages = {
+    pt: {
+      open: "INSCRIÇÕES ABERTAS",
+      closed: "INSCRIÇÕES FECHADAS"
+    },
+    en: {
+      open: "APPLICATIONS OPEN",
+      closed: "APPLICATIONS CLOSED"
+    },
+    es: {
+      open: "INSCRIPCIONES ABIERTAS",
+      closed: "INSCRIPCIONES CERRADAS"
+    }
+  };
+
+  const text = messages[language] || messages.pt;
+
+  if (label) {
+    label.textContent = isOpen ? text.open : text.closed;
+  }
+
+  if (dot) {
+    dot.classList.toggle("is-open", isOpen);
+    dot.classList.toggle("is-closed", !isOpen);
+  }
+
+  if (submitButton) {
+    submitButton.disabled = !isOpen || isSubmittingApplication;
+    submitButton.classList.toggle("registration-closed", !isOpen);
+  }
+}
+
+async function refreshPublicRegistrationStatus() {
+  try {
+    const isOpen = await getPublicRegistrationStatus();
+
+    renderPublicRegistrationStatus(isOpen);
+
+    return isOpen;
+  } catch (error) {
+    console.error("Erro ao consultar inscrições:", error);
+
+    // Se não for possível confirmar o status,
+    // manter o formulário bloqueado por segurança.
+    renderPublicRegistrationStatus(false);
+
+    return false;
+  }
+}
 
 // ======================================================
 // ENVIO DA INSCRIÇÃO
@@ -272,20 +371,11 @@ const message = document.querySelector("#form-message");
 if (form) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-const registrationsAreOpen =
-    await refreshPublicRegistrationStatus();
 
-if (!registrationsAreOpen) {
-    const message = document.querySelector("#form-message");
-
-    if (message) {
-        message.textContent =
-            "As inscrições estão fechadas no momento. Você ainda pode consultar o status de uma candidatura existente.";
-        message.className = "form-message";
+    if (isSubmittingApplication) {
+      return;
     }
 
-    return;
-}
     const lang =
       (formLang && formLang.value) ||
       localStorage.getItem("transfer_language") ||
@@ -297,51 +387,77 @@ if (!registrationsAreOpen) {
         success: "Inscrição recebida com sucesso!",
         code: "Seu código de candidatura é:",
         error: "Não foi possível enviar. Tente novamente.",
-        invalid: "Confira os campos obrigatórios e preencha todos corretamente."
+        invalid: "Confira os campos obrigatórios e preencha todos corretamente.",
+        closed: "As inscrições estão fechadas no momento. Você ainda pode consultar o status de uma candidatura existente."
       },
       en: {
         sending: "Submitting application...",
         success: "Application received successfully!",
         code: "Your application code is:",
         error: "Could not submit. Please try again.",
-        invalid: "Please check and complete all required fields correctly."
+        invalid: "Please check and complete all required fields correctly.",
+        closed: "Applications are currently closed. You can still check the status of an existing application."
       },
       es: {
         sending: "Enviando inscripción...",
         success: "¡Inscripción recibida con éxito!",
         code: "Tu código de solicitud es:",
         error: "No fue posible enviar. Inténtalo de nuevo.",
-        invalid: "Revisa y completa correctamente todos los campos obligatorios."
+        invalid: "Revisa y completa correctamente todos los campos obligatorios.",
+        closed: "Las inscripciones están cerradas actualmente. Aún puedes consultar el estado de una solicitud existente."
       }
     };
 
     const currentMessages = messages[lang] || messages.pt;
 
+    // Confirma o status mais recente antes de enviar.
+    const registrationsAreOpen =
+      await refreshPublicRegistrationStatus();
+
+    if (!registrationsAreOpen) {
+      if (message) {
+        message.textContent = currentMessages.closed;
+        message.className = "form-message";
+      }
+
+      return;
+    }
+
     if (!form.reportValidity()) {
       if (message) {
         message.textContent = currentMessages.invalid;
       }
+
       return;
+    }
+
+    isSubmittingApplication = true;
+
+    const submitButton = form.querySelector(
+      'button[type="submit"]'
+    );
+
+    if (submitButton) {
+      submitButton.disabled = true;
     }
 
     if (message) {
       message.textContent = currentMessages.sending;
+      message.className = "form-message";
     }
-
-    if (
-      SUPABASE_URL.startsWith("YOUR_") ||
-      SUPABASE_ANON_KEY.startsWith("YOUR_")
-    ) {
-      if (message) {
-        message.textContent =
-          "Configure Supabase in app.js before publishing.";
-      }
-      return;
-    }
-
-    const data = Object.fromEntries(new FormData(form).entries());
 
     try {
+      if (
+        SUPABASE_URL.startsWith("YOUR_") ||
+        SUPABASE_ANON_KEY.startsWith("YOUR_")
+      ) {
+        throw new Error("Configure o Supabase antes de publicar.");
+      }
+
+      const data = Object.fromEntries(
+        new FormData(form).entries()
+      );
+
       const response = await fetch(
         SUPABASE_URL + "/rest/v1/rpc/submit_application",
         {
@@ -365,20 +481,31 @@ if (!registrationsAreOpen) {
             p_squad_2: data.squad_2,
             p_squad_3: data.squad_3,
             p_contact: data.contact,
-            p_comments: data.comments.trim(),
+            p_comments: (data.comments || "").trim(),
             p_language: data.language || lang
           })
         }
       );
 
       if (!response.ok) {
-        throw new Error(await response.text());
+        const errorText = await response.text();
+
+        if (
+          errorText.includes("APPLICATIONS_CLOSED") ||
+          errorText.includes("inscrições estão fechadas")
+        ) {
+          throw new Error("APPLICATIONS_CLOSED");
+        }
+
+        throw new Error(errorText);
       }
 
       const result = await response.json();
-      const applicationCode = result && result[0]
-        ? result[0].application_code
-        : null;
+
+      const applicationCode =
+        result && result[0]
+          ? result[0].application_code
+          : null;
 
       if (!applicationCode) {
         throw new Error("Application code was not returned.");
@@ -410,21 +537,35 @@ if (!registrationsAreOpen) {
         });
       }
 
-      console.log("Application submitted successfully:", applicationCode);
+      console.log(
+        "Application submitted successfully:",
+        applicationCode
+      );
 
     } catch (error) {
       console.error("Application submission error:", error);
 
       if (message) {
-        message.textContent = currentMessages.error;
+        if (error.message === "APPLICATIONS_CLOSED") {
+          message.textContent = currentMessages.closed;
+        } else {
+          message.textContent = currentMessages.error;
+        }
+
+        message.className = "form-message";
       }
+
+    } finally {
+      isSubmittingApplication = false;
+
+      // Atualiza o botão de acordo com o status mais recente.
+      await refreshPublicRegistrationStatus();
     }
   });
 }
 
-
 // ======================================================
-// CONSULTA DE STATUS
+// CONSULTA DE STATUS DA CANDIDATURA
 // ======================================================
 
 const statusCodeInput = document.querySelector("#application-code");
@@ -478,8 +619,11 @@ async function checkApplicationStatus() {
     return;
   }
 
-  const lang = localStorage.getItem("transfer_language") || "pt";
+  const lang =
+    localStorage.getItem("transfer_language") || "pt";
+
   const t = statusTranslations[lang] || statusTranslations.pt;
+
   const code = statusCodeInput.value.trim().toUpperCase();
 
   statusResult.hidden = true;
@@ -519,6 +663,7 @@ async function checkApplicationStatus() {
     }
 
     const application = result[0];
+
     const translatedStatus =
       t[application.status] || application.status;
 
@@ -535,6 +680,7 @@ async function checkApplicationStatus() {
 
   } catch (error) {
     console.error("Status lookup error:", error);
+
     statusResult.hidden = true;
     statusMessage.textContent = t.error;
   }
@@ -556,82 +702,9 @@ if (statusCodeInput) {
   });
 }
 
-async function getPublicRegistrationStatus() {
-    const response = await fetch(
-        SUPABASE_URL + "/rest/v1/rpc/get_transfer_status",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "apikey": SUPABASE_ANON_KEY,
-                "Authorization": "Bearer " + SUPABASE_ANON_KEY
-            },
-            body: "{}"
-        }
-    );
+// ======================================================
+// VERIFICAÇÃO INICIAL
+// ======================================================
 
-    if (!response.ok) {
-        throw new Error("Não foi possível consultar as inscrições.");
-    }
-
-    return Boolean(await response.json());
-}
-
-function renderPublicRegistrationStatus(isOpen) {
-    const dot = document.querySelector("#public-status-dot");
-    const label = document.querySelector("#public-registration-status");
-    const submitButton = document.querySelector(
-        "#application-form button[type='submit']"
-    );
-
-    const language = (
-        localStorage.getItem("transfer_language") || "pt"
-    ).toLowerCase().slice(0, 2);
-
-    const messages = {
-        pt: {
-            open: "INSCRIÇÕES ABERTAS",
-            closed: "INSCRIÇÕES FECHADAS"
-        },
-        en: {
-            open: "APPLICATIONS OPEN",
-            closed: "APPLICATIONS CLOSED"
-        },
-        es: {
-            open: "INSCRIPCIONES ABIERTAS",
-            closed: "INSCRIPCIONES CERRADAS"
-        }
-    };
-
-    const text = messages[language] || messages.pt;
-
-    if (label) {
-        label.textContent = isOpen ? text.open : text.closed;
-    }
-
-    if (dot) {
-        dot.classList.toggle("is-closed", !isOpen);
-        dot.classList.toggle("is-open", isOpen);
-    }
-
-    if (submitButton) {
-        submitButton.disabled = !isOpen;
-        submitButton.classList.toggle("registration-closed", !isOpen);
-    }
-}
-
-async function refreshPublicRegistrationStatus() {
-    try {
-        const isOpen = await getPublicRegistrationStatus();
-        renderPublicRegistrationStatus(isOpen);
-        return isOpen;
-    } catch (error) {
-        console.error("Erro ao consultar inscrições:", error);
-
-        // Em caso de falha na consulta, não permitir novo envio
-        // pela interface até confirmar que as inscrições estão abertas.
-        renderPublicRegistrationStatus(false);
-        return false;
-    }
-}
+// Consulta o status ao carregar a página.
 refreshPublicRegistrationStatus();
