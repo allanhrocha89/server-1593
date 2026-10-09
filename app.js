@@ -3,6 +3,15 @@ const SUPABASE_URL = "https://tctbfrljloakqfrvtghf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_4mU1Xs4dabKVcvVjtJZWgA_sNGYlE0U";
 
 // ======================================================
+// VARIÁVEIS GLOBAIS
+// Devem ser declaradas antes de setLanguage().
+// ======================================================
+
+let isSubmittingApplication = false;
+let currentRegistrationStatus = null;
+let registrationStatusError = false;
+
+// ======================================================
 // TRADUÇÕES
 // ======================================================
 
@@ -247,7 +256,8 @@ const langSelect = document.querySelector("#language");
 const formLang = document.querySelector("#form-language");
 
 function getCurrentLanguage() {
-  return localStorage.getItem("transfer_language") || "pt";
+  const language = localStorage.getItem("transfer_language") || "pt";
+  return translations[language] ? language : "pt";
 }
 
 function setLanguage(lang) {
@@ -259,12 +269,16 @@ function setLanguage(lang) {
 
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.dataset.i18n;
-    if (t[key] !== undefined) el.innerHTML = t[key];
+    if (t[key] !== undefined) {
+      el.innerHTML = t[key];
+    }
   });
 
   document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
     const key = el.dataset.i18nPlaceholder;
-    if (t[key] !== undefined) el.placeholder = t[key];
+    if (t[key] !== undefined) {
+      el.placeholder = t[key];
+    }
   });
 
   if (langSelect) langSelect.value = selectedLang;
@@ -273,8 +287,11 @@ function setLanguage(lang) {
   localStorage.setItem("transfer_language", selectedLang);
 
   // Reaplica o status após trocar o idioma.
+  // As variáveis globais já foram inicializadas no início do arquivo.
   if (typeof currentRegistrationStatus === "boolean") {
     renderPublicRegistrationStatus(currentRegistrationStatus);
+  } else if (registrationStatusError) {
+    renderRegistrationStatusError();
   }
 }
 
@@ -290,10 +307,6 @@ if (langSelect) {
 // ======================================================
 // CONTROLE DO STATUS DAS INSCRIÇÕES
 // ======================================================
-
-let isSubmittingApplication = false;
-let currentRegistrationStatus = null;
-let registrationStatusError = false;
 
 async function getPublicRegistrationStatus() {
   const response = await fetch(
@@ -327,16 +340,17 @@ async function getPublicRegistrationStatus() {
 }
 
 function setFormAvailability(isOpen) {
-  const form = document.querySelector("#application-form");
+  const applicationForm = document.querySelector("#application-form");
   const notice = document.querySelector("#registration-closed-notice");
-  const submitButton = form?.querySelector('button[type="submit"]');
+  const submitButton = applicationForm?.querySelector('button[type="submit"]');
 
-  if (!form) return;
+  if (!applicationForm) return;
 
-  // Bloqueia os campos visíveis quando fechado.
-  form.querySelectorAll("input:not([type='hidden']), select, textarea").forEach((field) => {
-    field.disabled = !isOpen;
-  });
+  applicationForm
+    .querySelectorAll("input:not([type='hidden']), select, textarea")
+    .forEach((field) => {
+      field.disabled = !isOpen;
+    });
 
   if (submitButton) {
     submitButton.disabled = !isOpen || isSubmittingApplication;
@@ -348,7 +362,7 @@ function setFormAvailability(isOpen) {
 
   if (notice) notice.hidden = isOpen;
 
-  form.classList.toggle("form-registration-closed", !isOpen);
+  applicationForm.classList.toggle("form-registration-closed", !isOpen);
 }
 
 function renderPublicRegistrationStatus(isOpen) {
@@ -374,14 +388,25 @@ function renderPublicRegistrationStatus(isOpen) {
   }
 
   if (description) {
-    description.textContent = isOpen ? t.status_desc_open : t.status_desc_closed;
+    description.textContent = isOpen
+      ? t.status_desc_open
+      : t.status_desc_closed;
   }
 
   if (floatingButton) {
-    floatingButton.classList.remove("is-open", "is-closed", "is-loading", "registration-closed");
+    floatingButton.classList.remove(
+      "is-open",
+      "is-closed",
+      "is-loading",
+      "registration-closed"
+    );
+
     floatingButton.classList.add(isOpen ? "is-open" : "is-closed");
 
-    floatingButton.href = isOpen ? "#apply" : "#registration-closed-notice";
+    floatingButton.href = isOpen
+      ? "#apply"
+      : "#registration-closed-notice";
+
     floatingButton.setAttribute("aria-disabled", String(!isOpen));
     floatingButton.setAttribute(
       "aria-label",
@@ -425,7 +450,10 @@ function renderRegistrationStatusError() {
   }
 
   if (label) label.textContent = t.status_closed;
-  if (description) description.textContent = t.status_desc_error;
+
+  if (description) {
+    description.textContent = t.status_desc_error;
+  }
 
   if (floatingButton) {
     floatingButton.classList.remove("is-open", "is-loading");
@@ -433,6 +461,7 @@ function renderRegistrationStatusError() {
     floatingButton.href = "#registration-closed-notice";
     floatingButton.setAttribute("aria-disabled", "true");
     floatingButton.setAttribute("aria-label", t.status_closed);
+    floatingButton.title = t.status_closed;
   }
 
   if (floatingDot) {
@@ -466,12 +495,14 @@ if (floatingApplyButton) {
       event.preventDefault();
 
       const notice = document.querySelector("#registration-closed-notice");
-      if (notice) notice.hidden = false;
 
-      notice?.scrollIntoView({
-        behavior: "smooth",
-        block: "center"
-      });
+      if (notice) {
+        notice.hidden = false;
+        notice.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
     }
   });
 }
@@ -520,7 +551,7 @@ if (form) {
 
     const currentMessages = messages[lang] || messages.pt;
 
-    // Consulta novamente antes de enviar.
+    // Confirma novamente no Supabase antes de enviar.
     const registrationsAreOpen = await refreshPublicRegistrationStatus();
 
     if (!registrationsAreOpen) {
@@ -532,14 +563,19 @@ if (form) {
     }
 
     if (!form.reportValidity()) {
-      if (message) message.textContent = currentMessages.invalid;
+      if (message) {
+        message.textContent = currentMessages.invalid;
+      }
       return;
     }
 
     isSubmittingApplication = true;
 
     const submitButton = form.querySelector('button[type="submit"]');
-    if (submitButton) submitButton.disabled = true;
+
+    if (submitButton) {
+      submitButton.disabled = true;
+    }
 
     if (message) {
       message.textContent = currentMessages.sending;
@@ -592,6 +628,7 @@ if (form) {
       }
 
       const result = await response.json();
+
       const applicationCode = result && result[0]
         ? result[0].application_code
         : null;
@@ -602,7 +639,9 @@ if (form) {
 
       form.reset();
 
-      if (formLang) formLang.value = lang;
+      if (formLang) {
+        formLang.value = getCurrentLanguage();
+      }
 
       if (message) {
         message.replaceChildren();
@@ -611,24 +650,32 @@ if (form) {
         success.textContent = currentMessages.success;
 
         const codeText = document.createElement("span");
-        codeText.textContent = currentMessages.code + " " + applicationCode;
+        codeText.textContent =
+          currentMessages.code + " " + applicationCode;
 
         message.appendChild(success);
         message.appendChild(document.createElement("br"));
         message.appendChild(codeText);
 
-        message.scrollIntoView({ behavior: "smooth", block: "center" });
+        message.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
       }
 
-      console.log("Application submitted successfully:", applicationCode);
+      console.log(
+        "Application submitted successfully:",
+        applicationCode
+      );
 
     } catch (error) {
       console.error("Application submission error:", error);
 
       if (message) {
-        message.textContent = error.message === "APPLICATIONS_CLOSED"
-          ? currentMessages.closed
-          : currentMessages.error;
+        message.textContent =
+          error.message === "APPLICATIONS_CLOSED"
+            ? currentMessages.closed
+            : currentMessages.error;
 
         message.className = "form-message";
       }
@@ -717,11 +764,15 @@ async function checkApplicationStatus() {
           "apikey": SUPABASE_ANON_KEY,
           "Authorization": "Bearer " + SUPABASE_ANON_KEY
         },
-        body: JSON.stringify({ lookup_code: code })
+        body: JSON.stringify({
+          lookup_code: code
+        })
       }
     );
 
-    if (!response.ok) throw new Error(await response.text());
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
 
     const result = await response.json();
 
@@ -733,8 +784,13 @@ async function checkApplicationStatus() {
     const application = result[0];
     const translatedStatus = t[application.status] || application.status;
 
-    if (resultCode) resultCode.textContent = application.application_code;
-    if (resultStatus) resultStatus.textContent = translatedStatus;
+    if (resultCode) {
+      resultCode.textContent = application.application_code;
+    }
+
+    if (resultStatus) {
+      resultStatus.textContent = translatedStatus;
+    }
 
     statusResult.hidden = false;
     statusMessage.textContent = "";
