@@ -623,3 +623,81 @@ tbody tr:hover {
         flex-direction: column;
     }
 }
+
+/* Status da candidatura */
+#details-status {
+    display: block;
+    width: 100%;
+    min-height: 46px;
+    margin-top: 8px;
+    padding: 12px 14px;
+
+    color: #f1f5f9;
+    background-color: #111827;
+
+    border: 1px solid #374151;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-family: inherit;
+
+    cursor: pointer;
+    outline: none;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#details-status:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+#details-status option {
+    color: #f1f5f9;
+    background-color: #111827;
+}
+
+/* Observações administrativas */
+#admin-notes {
+    display: block;
+    width: 100%;
+    min-height: 130px;
+    margin-top: 8px;
+    padding: 14px;
+
+    color: #f1f5f9;
+    background-color: #111827;
+
+    border: 1px solid #374151;
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-family: inherit;
+    line-height: 1.6;
+
+    resize: vertical;
+    outline: none;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#admin-notes::placeholder {
+    color: #9ca3af;
+    opacity: 0.8;
+}
+
+#admin-notes:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+}
+
+/* Rótulos dos dois campos */
+label[for="details-status"],
+label[for="admin-notes"] {
+    display: block;
+    margin-top: 18px;
+
+    color: #e5e7eb;
+    font-size: 14px;
+    font-weight: 600;
+}
