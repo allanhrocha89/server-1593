@@ -258,13 +258,6 @@ const savedLanguage =
 
 setLanguage(savedLanguage);
 
-if (langSelect) {
-  langSelect.addEventListener("change", (event) => {
-    setLanguage(event.target.value);
-    refreshPublicRegistrationStatus();
-  });
-}
-
 // ======================================================
 // CONTROLE DO STATUS DAS INSCRIÇÕES
 // ======================================================
@@ -304,9 +297,12 @@ async function getPublicRegistrationStatus() {
 function renderPublicRegistrationStatus(isOpen) {
   const dot = document.querySelector("#public-status-dot");
   const label = document.querySelector("#public-registration-status");
+
   const submitButton = document.querySelector(
     "#application-form button[type='submit']"
   );
+
+  const floatingButton = document.querySelector("#floating-apply");
 
   const language =
     localStorage.getItem("transfer_language") || "pt";
@@ -314,20 +310,27 @@ function renderPublicRegistrationStatus(isOpen) {
   const messages = {
     pt: {
       open: "INSCRIÇÕES ABERTAS",
-      closed: "INSCRIÇÕES FECHADAS"
+      closed: "INSCRIÇÕES FECHADAS",
+      apply: "Inscrever-se",
+      closedButton: "Inscrições fechadas"
     },
     en: {
       open: "APPLICATIONS OPEN",
-      closed: "APPLICATIONS CLOSED"
+      closed: "APPLICATIONS CLOSED",
+      apply: "Apply Now",
+      closedButton: "Applications closed"
     },
     es: {
       open: "INSCRIPCIONES ABIERTAS",
-      closed: "INSCRIPCIONES CERRADAS"
+      closed: "INSCRIPCIONES CERRADAS",
+      apply: "Inscribirse",
+      closedButton: "Inscripciones cerradas"
     }
   };
 
   const text = messages[language] || messages.pt;
 
+  // Atualiza o status no cartão principal
   if (label) {
     label.textContent = isOpen ? text.open : text.closed;
   }
@@ -337,9 +340,35 @@ function renderPublicRegistrationStatus(isOpen) {
     dot.classList.toggle("is-closed", !isOpen);
   }
 
+  // Atualiza o botão de envio do formulário
   if (submitButton) {
     submitButton.disabled = !isOpen || isSubmittingApplication;
     submitButton.classList.toggle("registration-closed", !isOpen);
+  }
+
+  // Atualiza o botão flutuante
+  if (floatingButton) {
+    floatingButton.classList.toggle("registration-closed", !isOpen);
+
+    floatingButton.textContent = isOpen
+      ? text.apply
+      : text.closedButton;
+
+    floatingButton.setAttribute(
+      "aria-label",
+      isOpen ? text.apply : text.closedButton
+    );
+
+    floatingButton.setAttribute(
+      "aria-disabled",
+      String(!isOpen)
+    );
+
+    floatingButton.href = isOpen ? "#apply" : "#status";
+
+    floatingButton.title = isOpen
+      ? text.apply
+      : text.closedButton;
   }
 }
 
@@ -353,12 +382,39 @@ async function refreshPublicRegistrationStatus() {
   } catch (error) {
     console.error("Erro ao consultar inscrições:", error);
 
-    // Se não for possível confirmar o status,
-    // manter o formulário bloqueado por segurança.
+    // Em caso de falha, manter as inscrições bloqueadas.
     renderPublicRegistrationStatus(false);
 
     return false;
   }
+}
+
+// O clique do botão flutuante respeita o status atual.
+const floatingApplyButton = document.querySelector("#floating-apply");
+
+if (floatingApplyButton) {
+  floatingApplyButton.addEventListener("click", (event) => {
+    const isClosed = floatingApplyButton.classList.contains(
+      "registration-closed"
+    );
+
+    if (isClosed) {
+      event.preventDefault();
+
+      document.querySelector("#status")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+}
+
+// Atualiza o texto do botão quando o idioma mudar.
+if (langSelect) {
+  langSelect.addEventListener("change", (event) => {
+    setLanguage(event.target.value);
+    refreshPublicRegistrationStatus();
+  });
 }
 
 // ======================================================
@@ -410,7 +466,7 @@ if (form) {
 
     const currentMessages = messages[lang] || messages.pt;
 
-    // Confirma o status mais recente antes de enviar.
+    // Verifica o status mais recente antes de enviar.
     const registrationsAreOpen =
       await refreshPublicRegistrationStatus();
 
@@ -546,19 +602,16 @@ if (form) {
       console.error("Application submission error:", error);
 
       if (message) {
-        if (error.message === "APPLICATIONS_CLOSED") {
-          message.textContent = currentMessages.closed;
-        } else {
-          message.textContent = currentMessages.error;
-        }
+        message.textContent =
+          error.message === "APPLICATIONS_CLOSED"
+            ? currentMessages.closed
+            : currentMessages.error;
 
         message.className = "form-message";
       }
 
     } finally {
       isSubmittingApplication = false;
-
-      // Atualiza o botão de acordo com o status mais recente.
       await refreshPublicRegistrationStatus();
     }
   });
@@ -706,5 +759,4 @@ if (statusCodeInput) {
 // VERIFICAÇÃO INICIAL
 // ======================================================
 
-// Consulta o status ao carregar a página.
 refreshPublicRegistrationStatus();
