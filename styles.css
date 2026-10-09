@@ -29,3 +29,124 @@ footer{display:flex;justify-content:space-between;padding:30px 9vw;border-top:1p
     background: #7f1d1d;
     color: #ffffff;
 }
+
+/* =========================================
+   BOTÃO FLUTUANTE — SERVER 1593
+   ========================================= */
+
+.floating-apply {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    z-index: 1000;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    min-height: 56px;
+    padding: 0 23px;
+
+    background: linear-gradient(135deg, #e4ff79, #d7ff45);
+    color: #090d05;
+
+    border: 1px solid #efffae;
+    border-radius: 16px;
+
+    font-family: Inter, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: none;
+
+    box-shadow:
+        0 8px 25px #0008,
+        0 0 24px #d7ff4530;
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease;
+
+    animation: floating-apply-in 0.5s ease both;
+}
+
+.floating-apply::before {
+    content: "+";
+    display: grid;
+    place-items: center;
+    width: 25px;
+    height: 25px;
+    border-radius: 8px;
+    background: #101609;
+    color: #d7ff45;
+    font-size: 20px;
+    line-height: 1;
+}
+
+.floating-apply:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 32px #0009,
+        0 0 32px #d7ff4560;
+}
+
+.floating-apply:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.floating-apply:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 4px;
+}
+
+@keyframes floating-apply-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estado visual quando as inscrições estão fechadas */
+.floating-apply.registration-closed {
+    background: linear-gradient(135deg, #30343b, #1b2028);
+    border-color: #454b55;
+    color: #c0c6cf;
+    box-shadow: 0 8px 25px #0006;
+}
+
+.floating-apply.registration-closed::before {
+    content: "×";
+    background: #454b55;
+    color: #fff;
+}
+
+/* Adaptação para telas pequenas */
+@media (max-width: 600px) {
+    .floating-apply {
+        right: 16px;
+        bottom: 16px;
+        min-height: 50px;
+        padding: 0 16px;
+        border-radius: 13px;
+        font-size: 11px;
+    }
+
+    .floating-apply::before {
+        width: 23px;
+        height: 23px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .floating-apply {
+        animation: none;
+        transition: none;
+    }
+}
