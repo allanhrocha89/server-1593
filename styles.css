@@ -466,3 +466,28 @@ footer {
     transition-duration: .01ms !important;
   }
 }
+
+/* Banner promocional por idioma */
+.hero-promo {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 360px);
+  flex: 0 1 360px;
+  margin-left: auto;
+}
+
+.hero-promo img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid #30392a;
+  border-radius: 16px;
+  box-shadow: 0 20px 55px #0008;
+}
+
+@media (max-width: 800px) {
+  .hero-promo {
+    width: min(100%, 420px);
+    margin: 35px auto 0;
+  }
+}
