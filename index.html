@@ -9,6 +9,7 @@
   <title>Server 1593 · Transfer Center</title>
   <link rel="stylesheet" href="./styles.css">
 </head>
+
 <body>
   <header class="nav">
     <div class="brand">
@@ -29,7 +30,10 @@
         <option value="en">EN</option>
         <option value="es">ES</option>
       </select>
-      <a class="nav-cta" href="#apply" data-i18n="nav_cta">Inscrever-se</a>
+
+      <a class="nav-cta" href="#apply" data-i18n="nav_cta">
+        Inscrever-se
+      </a>
     </div>
   </header>
 
@@ -55,6 +59,7 @@
           <a class="button primary" href="#apply" data-i18n="hero_button">
             Começar inscrição
           </a>
+
           <a class="button ghost" href="#status" data-i18n="status_button">
             Acompanhar inscrição
           </a>
@@ -89,10 +94,12 @@
         <strong>1593</strong>
         <span data-i18n="stat_server">Servidor</span>
       </div>
+
       <div>
         <strong>3</strong>
         <span data-i18n="stat_languages">Idiomas</span>
       </div>
+
       <div>
         <strong>24/7</strong>
         <span data-i18n="stat_community">Comunidade</span>
@@ -213,6 +220,7 @@
           <span data-i18n="friends">
             Amigos / membros do grupo que irão com você *
           </span>
+
           <textarea
             name="friends"
             rows="3"
@@ -266,6 +274,7 @@
             <span data-i18n="contact">
               Cor do assento na última temporada *
             </span>
+
             <select name="contact" required>
               <option
                 value=""
@@ -275,6 +284,7 @@
               >
                 Selecione uma cor
               </option>
+
               <option value="Dourado" data-i18n="seat_gold">Dourado</option>
               <option value="Roxo" data-i18n="seat_purple">Roxo</option>
               <option value="Azul" data-i18n="seat_blue">Azul</option>
@@ -287,6 +297,7 @@
           <span data-i18n="comments">
             Informações adicionais (opcional)
           </span>
+
           <textarea
             name="comments"
             rows="5"
@@ -339,6 +350,7 @@
           <span data-i18n="status_code_label">
             Código da inscrição
           </span>
+
           <input
             id="application-code"
             type="text"
@@ -369,6 +381,7 @@
             <small data-i18n="status_result_code">
               Código da inscrição
             </small>
+
             <strong id="result-code"></strong>
           </div>
 
@@ -376,6 +389,7 @@
             <small data-i18n="status_result_status">
               Status
             </small>
+
             <strong id="result-status"></strong>
           </div>
         </div>
@@ -425,6 +439,17 @@
     <span>SERVER 1593 · TRANSFER CENTER</span>
     <span data-i18n="footer">Transfer Applications</span>
   </footer>
+
+  <!-- BOTÃO FLUTUANTE DE INSCRIÇÃO -->
+  <a
+    id="floating-apply"
+    class="floating-apply"
+    href="#apply"
+    data-i18n="nav_cta"
+    aria-label="Inscrever-se no Server 1593"
+  >
+    Inscrever-se
+  </a>
 
   <script type="module" src="./app.js"></script>
 </body>
